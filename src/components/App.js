@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <div>
           <Layout>
-              <Header className = "header-color" title = "Title">
+              <Header className = "header-color" title = "Quarantine Assist">
                   <Navigation>
                       <Link to = "/">Home</Link>
                       <Link to="/login">Login</Link>
@@ -17,12 +17,12 @@ class App extends Component {
                       <Link to="/contact">Contact</Link>
                   </Navigation>
               </Header>
-              <Drawer className = "drawer-color" title= "Drawer Title">
+              <Drawer className = "drawer-color" title= "Navigate to">
                   <Navigation>
-                      <Link to="/resume">Link</Link>
-                      <Link to="/aboutme">Link</Link>
-                      <Link to="/projects">Link</Link>
-                      <Link to="/contact">Link</Link>
+                      <Link to="/">Home</Link>
+                      <Link to="/login">Login</Link>
+                      <Link to="/videos">Videos</Link>
+                      <Link to="/contact">Contact</Link>
                   </Navigation>
               </Drawer>
               <Content>
