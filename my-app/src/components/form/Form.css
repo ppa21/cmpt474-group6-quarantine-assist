@@ -1,0 +1,16 @@
+ValidatorForm {
+    backgroundColor: 'white';
+    margin : 'auto';
+    padding : '5px';
+    textAlign: 'center'
+}
+
+button{
+    backgroundColor: 'blue';
+    color: 'white';
+    margin-left: 10px;
+}
+
+a {
+    text-decoration: none;
+}
