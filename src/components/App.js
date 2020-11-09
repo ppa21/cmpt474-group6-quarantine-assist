@@ -3,7 +3,14 @@ import './App.css';
 import {Layout, Header, Navigation, Drawer, Content} from 'react-mdl';
 import Main from './Main';
 import {Link} from 'react-router-dom';
+import Amplify from 'aws-amplify';
+import awsmobile from './aws-exports';
+import { withAuthenticator } from 'aws-amplify-react';
 
+// richardtest
+// Adminpassword123~
+
+Amplify.configure(awsmobile);
 class App extends Component {
   render() {
     return (
@@ -35,4 +42,5 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withAuthenticator(App, true);
+//export default App;
