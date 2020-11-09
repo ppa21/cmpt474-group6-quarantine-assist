@@ -10,7 +10,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 // richardtest
 // Adminpassword123~
 
-Amplify.configure(awsmobile);
+//Amplify.configure(awsmobile);
 class App extends Component {
   render() {
     return (
@@ -42,5 +42,5 @@ class App extends Component {
   }
 }
 
-export default withAuthenticator(App, false);
-//export default App;
+//export default withAuthenticator(App, false);
+export default App;
