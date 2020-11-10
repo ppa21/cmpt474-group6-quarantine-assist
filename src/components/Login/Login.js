@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Amplify from 'aws-amplify';
 import awsmobile from '../aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
-import "./Login.css";
+import "./login.css"
 
 // richardtest
 // Adminpassword123~
