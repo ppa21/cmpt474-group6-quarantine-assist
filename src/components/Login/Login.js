@@ -7,7 +7,7 @@ import "./login.css"
 // richardtest
 // Adminpassword123~
 
-Amplify.configure(awsmobile);
+// Amplify.configure(awsmobile);
 class Login extends Component {
   render(){
     return (
@@ -20,5 +20,5 @@ class Login extends Component {
   }
 }
 
-export default withAuthenticator(Login, true);
-//export default Login;
+// export default withAuthenticator(Login, true);
+export default Login;
