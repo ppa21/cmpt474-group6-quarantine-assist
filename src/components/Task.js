@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 
 const Task = () => {
@@ -7,17 +7,19 @@ const Task = () => {
   const [description, setDescription] = useState('')
 
   const history = useHistory()
-  const location = useLocation()
 
   const handleSubmit = async e => {
     e.preventDefault()
     try {
-      const response = await axios.post(process.env.REACT_APP_API_URL, {
-        title,
-        description
-      })
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/task`,
+        {
+          title,
+          description
+        }
+      )
       console.log(response.data)
-      history.push(`/task/${title.split(' ').join('-')}`)
+      history.push(`/task/${response.data.id}`)
     } catch (err) {
       console.error(err)
     }

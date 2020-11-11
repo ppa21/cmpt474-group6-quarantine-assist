@@ -1,11 +1,13 @@
 import boto3
 import datetime
 import json
+import random
+import string
 
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Tasks')
-    now = datetime.datetime.utcnow().isoformat()
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
     headers = {
         'Access-Control-Allow-Origin': '*'
     }
@@ -24,6 +26,7 @@ def lambda_handler(event, context):
         body = json.loads(event['body'])
         try:
             item = dict(
+                id=''.join(random.choice(string.digits) for i in range(5)),
                 title=body['title'],
                 description=body['description'],
                 created_at=now,
