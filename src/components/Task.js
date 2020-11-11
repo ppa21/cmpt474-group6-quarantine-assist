@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
-const url = 'https://4khmfdy6wl.execute-api.us-east-1.amazonaws.com/dev/post'
-
 const Task = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -14,7 +12,7 @@ const Task = () => {
   const handleSubmit = async e => {
     e.preventDefault()
     try {
-      const response = await axios.post(url, {
+      const response = await axios.post(process.env.REACT_APP_API_URL, {
         title,
         description
       })

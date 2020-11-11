@@ -5,16 +5,29 @@ import json
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Tasks')
+    now = datetime.datetime.utcnow().isoformat()
     headers = {
         'Access-Control-Allow-Origin': '*'
     }
     
-    if event['httpMethod'] == 'POST':
+    if event['httpMethod'] == 'GET':
+        # get all items
+        items = table.scan()
+        return dict(
+            statusCode=200,
+            headers=headers,
+            body=json.dumps(items['Items'])
+        )
+    
+    elif event['httpMethod'] == 'POST':
+        # create one item
         body = json.loads(event['body'])
         try:
             item = dict(
                 title=body['title'],
-                description=body['description']
+                description=body['description'],
+                created_at=now,
+                updated_at=now
             )
             table.put_item(Item=item)
             return dict(
