@@ -28,11 +28,6 @@ const Landing = () => {
     else return 0
   }
 
-  const parseDate = isoDate => {
-    const date = new Date(isoDate)
-    return date.toString().split(' ').slice(0,5).join(' ')
-  }
-
   return (
     <div>
       <h1>Latest tasks</h1>
@@ -40,7 +35,7 @@ const Landing = () => {
       {tasks.sort(compare).map(task => (
         <div
           key={task.id}
-          onClick={() =>history.push(`/task/${task.id}`)}
+          onClick={() => history.push(`/task/${task.id}`)}
           style={{
             marginBottom: '15px',
             background: '#d7f5df',
@@ -49,7 +44,7 @@ const Landing = () => {
             cursor: 'pointer'
           }}
         >
-          <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
+          <h4>{task.title}</h4>
           <p>{task.description}</p>
         </div>
       ))}

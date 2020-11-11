@@ -13,13 +13,23 @@ def lambda_handler(event, context):
     }
     
     if event['httpMethod'] == 'GET':
-        # get all items
-        items = table.scan()
-        return dict(
-            statusCode=200,
-            headers=headers,
-            body=json.dumps(items['Items'])
-        )
+        if event['pathParameters']:
+            # get one item
+            item = table.get_item(Key=dict(id=event['pathParameters']['id']))
+            return dict(
+                statusCode=200,
+                headers=headers,
+                body=json.dumps(item['Item'])
+            )
+        
+        else:
+            # get all items
+            items = table.scan()
+            return dict(
+                statusCode=200,
+                headers=headers,
+                body=json.dumps(items['Items'])
+            )
     
     elif event['httpMethod'] == 'POST':
         # create one item
