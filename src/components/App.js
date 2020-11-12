@@ -23,6 +23,7 @@ class App extends Component {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link>
                       <Link to="/contact">Contact</Link>
+                      <Link to="/profile">Profile</Link>
                       <AmplifySignOut /> 
                   </Navigation>
               </Header>
@@ -32,6 +33,7 @@ class App extends Component {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link>
                       <Link to="/contact">Contact</Link>
+                      <Link to="/profile">Profile</Link>
                       <AmplifySignOut /> 
                   </Navigation>
               </Drawer>
