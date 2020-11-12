@@ -32,9 +32,15 @@ const Profile = () => {
   }, [])
 
   const updateAttributes = async () => {
-    let result = await Auth.updateUserAttributes(user, JSON.stringify(newAttributes))
+    // let result = await Auth.updateUserAttributes(user, JSON.stringify(newAttributes))
     console.log(JSON.stringify(newAttributes))
-
+    try{
+    	let result = await Auth.updateUserAttributes(user, {
+    		'family_name': 'updateName'
+    	})
+    } catch(e){
+    	console.log(e)
+    }
   }
 
 
