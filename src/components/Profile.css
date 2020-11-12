@@ -1,21 +1,55 @@
+.profile{
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    flex-direction: column;
+    
+}
 .all-attributes-container {
     height:100%;
     min-height:100vh;
+    width: 80%;
     box-sizing: border-box;
-    background: #2c2c2c;
-    color: white;
     display: flex;
     flex-direction: column;
+    justify-content:center;
+    align-items:center;
 }
 
 .attribute-container {
     height: 100%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 50%;
     max-width: 1300px;
     margin-right: auto;
     margin-left: auto;
     padding-right: 50px;
     padding-left: 50px;
+}
+
+.attribute-input{
+    margin-left: 20px;
+    display: flex;
+    padding: 10px 10px 10px 10px;
+    align-content:center;
+    justify-content: center;
+}
+
+input{
+    font-size: 20px;
+    padding: 10px 10px 10px 10px;
+}
+
+::-webkit-input-placeholder {
+    text-align: center;
+ }
+
+ .submit-btn-container{
+     padding-top: 20px;
+ }
+
+ .submit-btn {
+    font-size: 23px;
+    transition: all 0.2s ease-out;
 }
