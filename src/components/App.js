@@ -7,7 +7,7 @@ import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
-
+import '@aws-amplify/ui/dist/style.css';
 // richardtest
 // Adminpassword123~
 
@@ -23,6 +23,7 @@ class App extends Component {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link>
                       <Link to="/contact">Contact</Link>
+                      <Link to="/profile">Profile</Link>
                       <AmplifySignOut /> 
                   </Navigation>
               </Header>
@@ -32,6 +33,7 @@ class App extends Component {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link>
                       <Link to="/contact">Contact</Link>
+                      <Link to="/profile">Profile</Link>
                       <AmplifySignOut /> 
                   </Navigation>
               </Drawer>

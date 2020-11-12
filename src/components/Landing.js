@@ -7,6 +7,7 @@ const Landing = () => {
   const history = useHistory()
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL)
     async function fetchTasks() {
       try {
         const response = await axios.get(
@@ -18,6 +19,7 @@ const Landing = () => {
         console.error(err)
       }
     }
+
     fetchTasks()
   }, [])
 

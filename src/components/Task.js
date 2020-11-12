@@ -24,7 +24,9 @@ const Task = () => {
         console.error(err)
       }
     }
+
     if (!isNewTask) fetchTask()
+    
   }, [isNewTask, location.pathname])
 
   const handleSubmit = async e => {
