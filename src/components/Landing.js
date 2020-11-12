@@ -13,7 +13,7 @@ const Landing = () => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/task`
         )
-        console.log(response)
+        console.log(response.data)
         setTasks(response.data)
       } catch (err) {
         console.error(err)
