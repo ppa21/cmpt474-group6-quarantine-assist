@@ -29,13 +29,13 @@ const Task = () => {
 
     async function fetchUserAttributes() {
       const { attr } = await Auth.currentAuthenticatedUser();
+      console.log(attr);
       setAttributes(attr);
     }
 
     if (!isNewTask) fetchTask()
     if (!attributes) fetchUserAttributes()
     
-    console.log(attributes);
   }, [isNewTask, location.pathname])
 
   const handleSubmit = async e => {
