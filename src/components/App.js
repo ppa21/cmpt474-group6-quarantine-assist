@@ -8,12 +8,12 @@ import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui/dist/style.css';
+
 // richardtest
 // Adminpassword123~
-
 Amplify.configure(awsmobile);
 class App extends Component {
-  render() {
+  render() {   
     return (
       <div>
           <Layout>

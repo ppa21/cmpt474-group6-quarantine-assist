@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Auth } from 'aws-amplify'
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
@@ -14,9 +15,14 @@ const Task = () => {
   useEffect(() => {
     async function fetchTask() {
       const id = location.pathname.split('/')[2]
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/task/${id}`
+          `${process.env.REACT_APP_API_URL}/task/${id}`,
+          {
+            headers: { 'Authorization': idToken }
+          }
         )
         console.log(response.data)
         setTask(response.data)
@@ -32,11 +38,16 @@ const Task = () => {
   const handleSubmit = async e => {
     e.preventDefault()
     try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/task`,
         {
           title,
           description
+        },
+        {
+          headers: { 'Authorization': idToken }
         }
       )
       console.log(response.data)
@@ -48,7 +59,7 @@ const Task = () => {
 
   const parseDate = isoDate => {
     const date = new Date(isoDate)
-    return date.toString().split(' ').slice(0,5).join(' ')
+    return date.toString().split(' ').slice(0, 5).join(' ')
   }
 
   return (

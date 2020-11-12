@@ -4,10 +4,10 @@ const awsmobile = {
     region: "us-east-1",
 
     // Amazon Cognito User Pool ID
-    userPoolId: "us-east-1_GPcgwhgV0",
+    userPoolId: process.env.REACT_APP_USER_POOL_ID,
 
     // Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: "3d27mke7jqfosk0fqg6qn4in26"
+    userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID
   }
 };
 
