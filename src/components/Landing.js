@@ -8,6 +8,7 @@ const Landing = () => {
   const history = useHistory()
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL)
     async function fetchTasks() {
       try {
         const sessionObject = await Auth.currentSession();
@@ -24,6 +25,7 @@ const Landing = () => {
         console.error(err)
       }
     }
+
     fetchTasks()
   }, [])
 
