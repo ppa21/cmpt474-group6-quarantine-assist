@@ -43,8 +43,8 @@ const Profile = () => {
     }
 
     try{
-      // let result = await Auth.updateUserAttributes(user, newAttributes)
-      // console.log(result)
+      let result = await Auth.updateUserAttributes(user, newAttributes)
+      console.log(result)
       toast.info('Success!', toastSettings);
     } catch(e){
     	console.log(e)
