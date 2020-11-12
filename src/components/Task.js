@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import { Auth } from 'aws-amplify';
 import axios from 'axios'
 
 const Task = () => {
@@ -25,6 +26,9 @@ const Task = () => {
       }
     }
     if (!isNewTask) fetchTask()
+
+    const { attributes } = await Auth.currentAuthenticatedUser();
+    console.log(attributes);
   }, [isNewTask, location.pathname])
 
   const handleSubmit = async e => {
