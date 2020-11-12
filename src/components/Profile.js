@@ -43,8 +43,8 @@ const Profile = () => {
     }
 
     try{
-      let result = await Auth.updateUserAttributes(user, newAttributes)
-      console.log(result)
+      // let result = await Auth.updateUserAttributes(user, newAttributes)
+      // console.log(result)
       toast.info('Success!', toastSettings);
     } catch(e){
     	console.log(e)
@@ -62,14 +62,16 @@ const Profile = () => {
       <div className="all-attributes-container">
         {Object.keys(attrKeys).map((key) => (
           <div className="attribute-container" key={key}>
-            <h4>{attrKeys[key]}</h4>
+            {attrKeys[key]}
             <div className="attribute-input">
-              <input
-                type='text' 
-                placeholder={(key in attributes) ? attributes[key] : "-"} 
-                value={newAttributes[key]}
-                onChange={e => setNewAttributes({...newAttributes, [key]: e.target.value})} 
-              />
+              <div className="input-text">
+                <input
+                  type='text' 
+                  placeholder={(key in attributes) ? attributes[key] : "-"} 
+                  value={newAttributes[key]}
+                  onChange={e => setNewAttributes({...newAttributes, [key]: e.target.value})} 
+                />
+              </div>
               <div className="reset-btn-container">
                 <button className="reset-btn" onClick={() => setNewAttributes({
                     ...newAttributes, 
