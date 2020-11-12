@@ -7,12 +7,13 @@ const Landing = () => {
   const history = useHistory()
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL)
     async function fetchTasks() {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/task`
         )
-        console.log(response.data)
+        console.log(response)
         setTasks(response.data)
       } catch (err) {
         console.error(err)
