@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom'
 import { Auth } from 'aws-amplify';
 
 const Profile = () => {
   const [attributes, setAttributes] = useState({})
+  const attrKeys = {
+    'given_name': 'First Name', 
+    'family_name': 'Last Name',
+    'middle_name': 'Middle Name',
+    'nickname': 'Nickname',
+    'preferred_username': 'Username',
+    'email':'Email',
+    'address': 'Address',
+    'birthdate': 'Birthdate',
+    'phone_number': 'Phone Number'
+  }
 
   useEffect(() => {
     async function fetchUserAttributes() {
@@ -13,29 +23,20 @@ const Profile = () => {
     }
 
     fetchUserAttributes()
-    checkUser()
   }, [])
-
-  const checkUser = () => {
-    Auth.currentAuthenticatedUser()
-      .then(user =>{
-        setAttributes(user.attributes)
-        console.log({ user })
-      })
-      .catch(err => console.log(err))
-  }
 
   return (
     <div>
-      <button onClick={checkUser}>Check User</button>
-      <h1>Latest tasks</h1>
-      <Link to='/task/new'><button>Create task</button></Link>
-      {Object.keys(attributes).map((key) => (
-      	<div className="attribute-container" key={key}>
-      	  <h3>{key}</h3>
-          <h4>{attributes[key]}</h4>
-        </div>
-      ))}
+      <h1>Your Profile</h1>
+
+      <div className="all-attributes-container">
+        {Object.keys(attrKeys).map((key) => (
+          <div className="attribute-container" key={key}>
+      	  <h3>attrKeys[key]</h3>
+          <h4>{(key in attributes) ? attributes[key] : "-"}</h4>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
