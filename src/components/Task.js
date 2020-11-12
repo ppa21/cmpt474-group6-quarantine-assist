@@ -7,6 +7,7 @@ const Task = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [task, setTask] = useState({})
+  const [attributes, setAttributes] = useState({})
 
   const history = useHistory()
   const location = useLocation()
@@ -25,9 +26,15 @@ const Task = () => {
         console.error(err)
       }
     }
-    if (!isNewTask) fetchTask()
 
-    const { attributes } = await Auth.currentAuthenticatedUser();
+    async function fetchUserAttributes() {
+      const { attr } = await Auth.currentAuthenticatedUser();
+      setAttributes(attr);
+    }
+
+    if (!isNewTask) fetchTask()
+    if (!attributes) fetchUserAttributes()
+    
     console.log(attributes);
   }, [isNewTask, location.pathname])
 
