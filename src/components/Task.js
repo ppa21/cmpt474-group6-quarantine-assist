@@ -34,7 +34,7 @@ const Task = () => {
     }
 
     if (!isNewTask) fetchTask()
-    if (!attributes) fetchUserAttributes()
+    fetchUserAttributes()
     
   }, [isNewTask, location.pathname])
 
