@@ -30,6 +30,7 @@ const Landing = () => {
 
     fetchUserAttributes()
     fetchTasks()
+    checkUser()
   }, [])
 
   const compare = (a, b) => {
@@ -40,7 +41,10 @@ const Landing = () => {
   }
   const checkUser = () => {
     Auth.currentAuthenticatedUser()
-      .then(user => console.log({ user }))
+      .then(user =>{
+        setAttributes(user.attributes)
+        console.log({ user })
+      })
       .catch(err => console.log(err))
   }
 
