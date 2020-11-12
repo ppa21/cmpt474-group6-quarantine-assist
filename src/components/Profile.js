@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Profile.css';
 
 
@@ -15,9 +17,11 @@ const Profile = () => {
     'preferred_username': 'Username',
     'email':'Email',
     'address': 'Address',
-    'birthdate': 'Birthdate',
+    'birthdate': 'Birthdate (YYYY-MM-DD)',
     'phone_number': 'Phone Number'
   }
+
+  const toastSettings = {position: "bottom-center", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,}
 
   useEffect(() => {
     async function fetchUserAttributes() {
@@ -32,13 +36,22 @@ const Profile = () => {
   }, [])
 
   const updateAttributes = async () => {
-    // let result = await Auth.updateUserAttributes(user, JSON.stringify(newAttributes))
     console.log(JSON.stringify(newAttributes))
+    if('birthdate' in newAttributes && !isValidDate(newAttributes['birthdate'])){
+      toast.error('Please Enter a Valid Date', toastSettings);
+    }
+
     try{
-    	let result = await Auth.updateUserAttributes(user, newAttributes)
+      let result = await Auth.updateUserAttributes(user, newAttributes)
+      console.log(result)
+      toast.info('Success!', toastSettings);
     } catch(e){
     	console.log(e)
     }
+  }
+
+  const isValidDate = (date) => {
+    return (/\d{4}-\d{2}-\d{2}/g).test(date) && date.length === 10
   }
 
 
@@ -56,7 +69,8 @@ const Profile = () => {
                 value={newAttributes[key]}
                 onChange={e => {
                   setNewAttributes({...newAttributes, [key]: e.target.value})
-                  console.log(newAttributes)
+    				console.log(JSON.stringify(newAttributes))
+
                 }} 
               />
             </div>
@@ -66,6 +80,7 @@ const Profile = () => {
           <button className="submit-btn" onClick={updateAttributes}> Submit </button>
         </div>
       </div>
+      <ToastContainer className="toast"/>
     </div>
   )
 }
