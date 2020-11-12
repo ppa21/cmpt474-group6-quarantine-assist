@@ -39,6 +39,7 @@ const Profile = () => {
     console.log(JSON.stringify(newAttributes))
     if('birthdate' in newAttributes && !isValidDate(newAttributes['birthdate'])){
       toast.error('Please Enter a Valid Date', toastSettings);
+      return
     }
 
     try{
