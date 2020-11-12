@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Auth } from 'aws-amplify'
 import { useHistory, Link } from 'react-router-dom'
 import axios from 'axios'
 
@@ -9,8 +10,13 @@ const Landing = () => {
   useEffect(() => {
     async function fetchTasks() {
       try {
+        const sessionObject = await Auth.currentSession();
+        const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/task`
+          `${process.env.REACT_APP_API_URL}/task`,
+          {
+            headers: { 'Authorization': idToken }
+          }
         )
         console.log(response.data)
         setTasks(response.data)
