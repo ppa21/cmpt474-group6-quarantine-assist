@@ -39,12 +39,12 @@ const Profile = () => {
     console.log(JSON.stringify(newAttributes))
     if('birthdate' in newAttributes && !isValidDate(newAttributes['birthdate'])){
       toast.error('Please Enter a Valid Date', toastSettings);
-      return
+      return;
     }
 
     try{
-      let result = await Auth.updateUserAttributes(user, newAttributes)
-      console.log(result)
+      // let result = await Auth.updateUserAttributes(user, newAttributes)
+      // console.log(result)
       toast.info('Success!', toastSettings);
     } catch(e){
     	console.log(e)
@@ -68,12 +68,17 @@ const Profile = () => {
                 type='text' 
                 placeholder={(key in attributes) ? attributes[key] : "-"} 
                 value={newAttributes[key]}
-                onChange={e => {
-                  setNewAttributes({...newAttributes, [key]: e.target.value})
-    				console.log(JSON.stringify(newAttributes))
-
-                }} 
+                onChange={e => setNewAttributes({...newAttributes, [key]: e.target.value})} 
               />
+              <div className="reset-btn-container">
+                <button className="reset-btn" onClick={() => setNewAttributes({
+                    ...newAttributes, 
+                    [key]: (key in attributes) ? attributes[key] : ''
+                })}>
+                  Reset
+                </button>
+              </div>
+              
             </div>
           </div>
         ))}

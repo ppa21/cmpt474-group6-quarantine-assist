@@ -54,4 +54,13 @@ input{
     transition: all 0.2s ease-out;
 }
 
+.reset-btn-container {
+    display: flex;
+    justify-content:center;
+    align-content:center;
+    padding: 10px 0 10px 10px;
+}
 
+.reset-btn{
+    font-size:15px;
+}
