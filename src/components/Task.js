@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Auth } from 'aws-amplify';
 import axios from 'axios'
 
 const Task = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [task, setTask] = useState({})
-  const [attributes, setAttributes] = useState({})
 
   const history = useHistory()
   const location = useLocation()
@@ -27,14 +25,7 @@ const Task = () => {
       }
     }
 
-    async function fetchUserAttributes() {
-      const { attr } = await Auth.currentAuthenticatedUser();
-      console.log(attr);
-      setAttributes(attr);
-    }
-
     if (!isNewTask) fetchTask()
-    fetchUserAttributes()
     
   }, [isNewTask, location.pathname])
 

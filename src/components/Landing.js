@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom'
+import { Auth } from 'aws-amplify';
 import axios from 'axios'
 
 const Landing = () => {
   const [tasks, setTasks] = useState([])
   const history = useHistory()
+  const [attributes, setAttributes] = useState({})
 
   useEffect(() => {
     console.log(process.env.REACT_APP_API_URL)
@@ -19,6 +21,14 @@ const Landing = () => {
         console.error(err)
       }
     }
+
+    async function fetchUserAttributes() {
+      const { attr } = await Auth.currentAuthenticatedUser();
+      console.log(attr);
+      setAttributes(attr);
+    }
+
+    fetchUserAttributes()
     fetchTasks()
   }, [])
 
@@ -28,9 +38,15 @@ const Landing = () => {
     else if (a.updated_at > b.updated_at) return -1
     else return 0
   }
+  const checkUser = () => {
+    Auth.currentAuthenticatedUser()
+      .then(user => console.log({ user }))
+      .catch(err => console.log(err))
+  }
 
   return (
     <div>
+      <button onClick={checkUser}>Check User</button>
       <h1>Latest tasks</h1>
       <Link to='/task/new'><button>Create task</button></Link>
       {tasks.sort(compare).map(task => (
