@@ -22,28 +22,34 @@ const Profile = () => {
   const toastSettings = {position: "bottom-center", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,}
 
   useEffect(() => {
-    async function fetchUserAttributes() {
-      const c_user = await Auth.currentAuthenticatedUser()
-      console.log(c_user.attributes);
-      setUser(c_user);
-      setAttributes(c_user.attributes);
-      setNewAttributes(c_user.attributes);
-    }
-
     fetchUserAttributes()
   }, [])
+
+  const fetchUserAttributes = async () => {
+    const c_user = await Auth.currentAuthenticatedUser()
+    console.log(c_user.attributes);
+    setUser(c_user);
+    setAttributes(c_user.attributes);
+    setNewAttributes(c_user.attributes);
+  }
 
   const updateAttributes = async () => {
     console.log(JSON.stringify(newAttributes))
     if('birthdate' in newAttributes && !isValidDate(newAttributes['birthdate'])){
-      toast.error('Please Enter a Valid Date', toastSettings);
-      return;
+      toast.error('Please Enter a Valid Date', toastSettings)
+      return
+    }
+
+    if(JSON.stringify(attributes) === JSON.stringify(newAttributes)){
+      toast.warning('No changes made', toastSettings)
+      return
     }
 
     try{
       let result = await Auth.updateUserAttributes(user, newAttributes)
       console.log(result)
-      toast.info('Success!', toastSettings);
+      setAttributes(newAttributes)
+      toast.info('Success!', toastSettings)
     } catch(e){
     	console.log(e)
     }

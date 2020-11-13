@@ -62,3 +62,11 @@ input{
 .reset-btn{
     font-size:15px;
 }
+
+.Toastify__toast--warning {
+    color: rgb(73, 73, 73);
+}
+
+.Toastify__toast{
+    text-align: center;
+}
