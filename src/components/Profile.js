@@ -12,9 +12,7 @@ const Profile = () => {
   const attrKeys = {
     'given_name': 'First Name', 
     'family_name': 'Last Name',
-    'middle_name': 'Middle Name',
     'nickname': 'Nickname',
-    'preferred_username': 'Username',
     'email':'Email',
     'address': 'Address',
     'birthdate': 'Birthdate (YYYY-MM-DD)',
