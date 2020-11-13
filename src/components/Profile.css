@@ -1,0 +1,64 @@
+.profile{
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+.all-attributes-container {
+    height:100%;
+    min-height:100vh;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+
+.attribute-container {
+    height: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    max-width: 700px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 50px;
+    padding-left: 50px;
+}
+
+.attribute-input{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 10px 20px 10px;
+    align-content:center;
+    justify-content: center;
+}
+
+input{
+    font-size: 15px;
+    padding: 10px 10px 10px 10px;
+    line-height: 10px;
+}
+
+::-webkit-input-placeholder {
+    text-align: center;
+}
+
+.submit-btn-container{
+    padding-top: 20px;
+}
+
+.submit-btn {
+    font-size: 23px;
+    transition: all 0.2s ease-out;
+}
+
+.reset-btn-container {
+    padding: 0 0 10px 10px;
+}
+
+.reset-btn{
+    font-size:15px;
+}
