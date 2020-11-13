@@ -41,7 +41,7 @@ const Profile = () => {
     }
 
     if(JSON.stringify(attributes) === JSON.stringify(newAttributes)){
-      toast.warning('No changes made', toastSettings)
+      toast.warning('No changes made', {...toastSettings, progressClassName: "warning-progress-bar"})
       return
     }
 

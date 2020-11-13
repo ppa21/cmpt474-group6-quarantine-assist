@@ -67,6 +67,11 @@ input{
     color: rgb(73, 73, 73);
 }
 
+.warning-progress-bar {
+    background-color: rgb(73, 73, 73) !important;
+}
+
 .Toastify__toast{
     text-align: center;
+    font-weight: bold;
 }
