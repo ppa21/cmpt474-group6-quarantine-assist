@@ -6,10 +6,12 @@ import Login from './Login/Login';
 import Contact from './Contact';
 import Task from './Task'
 import Profile from './Profile'
+import Home from "./Home"
 
 const Main = () => (
   <Switch>
-    <Route exact path = "/" component = {Landing} />
+    <Route exact path = "/" component={Home} />
+    <Route exact path = "/tasks/all" component={Landing} />
     <Route path = "/videos" component = {Videos} />
     <Route path="/login" exact component={Login} />
     <Route path="/contact" exact component={Contact} />
