@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import './App.css';
 import {Layout, Header, Navigation, Drawer, Content} from 'react-mdl';
 import Main from './Main';
@@ -8,12 +8,33 @@ import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui/dist/style.css';
+import { Auth } from 'aws-amplify'; 
+import { onAuthUIStateChange } from '@aws-amplify/ui-components' 
 
 // richardtest
 // Adminpassword123~
-Amplify.configure(awsmobile);
-class App extends Component {
-  render() {   
+// Amplify.configure(awsmobile);
+const App = () => {
+    const [loggedIn, setLoggedIn] = useState(false)   
+
+    useEffect(() => {
+        const currentUser = () => {
+            Auth.currentAuthenticatedUser()
+              .then(user => {
+                console.log("USER", user);
+                // setText("logged in") 
+                setLoggedIn(true)  
+              })
+              .catch(err => {
+                console.log("ERROR", err);
+                // setText("not logged in") 
+                setLoggedIn(false) 
+              });
+          };
+    
+          currentUser(); 
+    }, []);  
+
     return (
       <div>
           <Layout>
@@ -21,10 +42,13 @@ class App extends Component {
                   <Navigation>
                       <Link to = "/">Home</Link>
                       <Link to="/login">Login</Link>
-                      <Link to="/videos">Videos</Link>
+                      <Link to="/videos">Videos</Link> 
                       <Link to="/contact">Contact</Link>
+                      <Link to="tasks/all">Tasks</Link>
                       <Link to="/profile">Profile</Link>
-                      <AmplifySignOut /> 
+                      {loggedIn ? <AmplifySignOut /> : ""}
+                      {/* {loggedIn && <AmplifySignOut />} */}
+                      {/* <AmplifySignOut />  */} 
                   </Navigation>
               </Header>
               <Drawer className = "drawer-color" title= "Navigate to">
@@ -33,6 +57,7 @@ class App extends Component {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link>
                       <Link to="/contact">Contact</Link>
+                      <Link to="tasks/all">Tasks</Link>
                       <Link to="/profile">Profile</Link>
                       <AmplifySignOut /> 
                   </Navigation>
@@ -44,8 +69,7 @@ class App extends Component {
           </Layout>
       </div> 
     ); 
-  }
 }
 
-export default withAuthenticator(App, false);
-// export default App;
+// export default withAuthenticator(App, false);
+export default App;
