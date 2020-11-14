@@ -25,6 +25,8 @@
     width: 100px;
 }
 
-.create-btn-container{
+.create-container{
     max-width: 600px;
+    display: flex;
+    justify-content: flex-end;
 }

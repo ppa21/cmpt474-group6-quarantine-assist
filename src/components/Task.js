@@ -91,7 +91,7 @@ const Task = () => {
                 <textarea className="desc-input"
                   type='text' value={description} onChange={e => setDescription(e.target.value)} />
               </div>
-              <div className="create-btn-container">
+              <div className="create-container">
                 <input type="submit" value='Create' />
               </div>
             </form>
