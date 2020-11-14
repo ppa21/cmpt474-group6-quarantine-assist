@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Auth } from 'aws-amplify'
+import { withAuthenticator } from 'aws-amplify-react';
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
@@ -35,7 +36,7 @@ const Task = () => {
     }
 
     if (!isNewTask) fetchTask()
-    
+
   }, [isNewTask, location.pathname])
 
   const handleSubmit = async e => {
@@ -67,47 +68,45 @@ const Task = () => {
 
   return (
     <div className="container">
-      <div className="all-tasks-container">
-        {!isNewTask && !task.id && <div className="spinner">
-          <Loader type="Oval" color="#008cff"/>
-        </div>
-        }
-        
-          {isNewTask &&
-          <div className="task-container">
-            <form onSubmit={handleSubmit}>
-              <h4>New Task</h4>
-              <div className="title">
-                <div className="label-container">
-                  <label>Title</label>
-                </div>
-                <input className="title-input"
-                  type='text' value={title} onChange={e => setTitle(e.target.value)} />
-              </div>
-              <div className="description">
-                <div className="label-container">
-                  <label>Description</label>
-                </div>
-                <textarea className="desc-input"
-                  type='text' value={description} onChange={e => setDescription(e.target.value)} />
-              </div>
-              <div className="create-container">
-                <input type="submit" value='Create' />
-              </div>
-            </form>
-          </div>
-          }
-          {task.id &&
-          <div className="task-container">
-            <div>
-              <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
-              <p>{task.description}</p>
-            </div>
-          </div>
-          }
+      {!isNewTask && !task.id && <div className="spinner">
+        <Loader type="Oval" color="#008cff" />
       </div>
+      }
+
+      {isNewTask &&
+        <div className="task-container">
+          <form onSubmit={handleSubmit}>
+            <h4>New Task</h4>
+            <div className="title">
+              <div className="label-container">
+                <label>Title</label>
+              </div>
+              <input className="title-input"
+                type='text' value={title} onChange={e => setTitle(e.target.value)} />
+            </div>
+            <div className="description">
+              <div className="label-container">
+                <label>Description</label>
+              </div>
+              <textarea className="desc-input"
+                type='text' value={description} onChange={e => setDescription(e.target.value)} />
+            </div>
+            <div className="create-container">
+              <input type="submit" value='Create' />
+            </div>
+          </form>
+        </div>
+      }
+      {task.id &&
+        <div className="task-container">
+          <div>
+            <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
+            <p>{task.description}</p>
+          </div>
+        </div>
+      }
     </div>
   )
 }
 
-export default Task
+export default withAuthenticator(Task, false);

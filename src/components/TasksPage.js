@@ -45,25 +45,23 @@ const TasksPage = () => {
 
   return (
     <div className="container">
-      <div className="all-tasks-container">
       <h1>Latest tasks</h1>
       {!tasks.length && <div className="spinner">
-        <Loader type="Oval" color="#008cff"/>
+        <Loader type="Oval" color="#008cff" />
       </div>}
-        
-        {tasks.sort(compare).map(task => (
-          <div 
-            className="task-container"
-            key={task.id}
-            onClick={() => history.push(`/task/${task.id}`)}
-          >
-            <div className="task-title">{task.title}</div>
-            <div className="task-desc">{task.description}</div>
-          </div>
-        ))}
+
+      {tasks.sort(compare).map(task => (
+        <div
+          className="task-container"
+          key={task.id}
+          onClick={() => history.push(`/task/${task.id}`)}
+        >
+          <div className="task-title">{task.title}</div>
+          <div className="task-desc">{task.description}</div>
+        </div>
+      ))}
       <div className="create-btn-container">
         <Link to='/task/new'><button className='create-btn'>Create task</button></Link>
-      </div>
       </div>
     </div>
   )
