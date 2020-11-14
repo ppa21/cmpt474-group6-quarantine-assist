@@ -13,16 +13,16 @@ const Profile = () => {
   const [attributes, setAttributes] = useState({})
   const [newAttributes, setNewAttributes] = useState({})
   const attrKeys = {
-    'given_name': 'First Name', 
+    'given_name': 'First Name',
     'family_name': 'Last Name',
     'nickname': 'Nickname',
-    'email':'Email',
+    'email': 'Email',
     'address': 'Address',
     'birthdate': 'Birthdate (YYYY-MM-DD)',
     'phone_number': 'Phone Number'
   }
 
-  const toastSettings = {position: "bottom-center", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,}
+  const toastSettings = { position: "bottom-center", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, }
 
   useEffect(() => {
     fetchUserAttributes()
@@ -38,23 +38,23 @@ const Profile = () => {
 
   const updateAttributes = async () => {
     console.log(JSON.stringify(newAttributes))
-    if('birthdate' in newAttributes && !isValidDate(newAttributes['birthdate'])){
+    if ('birthdate' in newAttributes && !isValidDate(newAttributes['birthdate'])) {
       toast.error('Please Enter a Valid Date', toastSettings)
       return
     }
 
-    if(JSON.stringify(attributes) === JSON.stringify(newAttributes)){
-      toast.warning('No changes made', {...toastSettings, progressClassName: "warning-progress-bar"})
+    if (JSON.stringify(attributes) === JSON.stringify(newAttributes)) {
+      toast.warning('No changes made', { ...toastSettings, progressClassName: "warning-progress-bar" })
       return
     }
 
-    try{
+    try {
       let result = await Auth.updateUserAttributes(user, newAttributes)
       console.log(result)
       setAttributes(newAttributes)
       toast.info('Success!', toastSettings)
-    } catch(e){
-    	console.log(e)
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -73,21 +73,21 @@ const Profile = () => {
             <div className="attribute-input">
               <div className="input-text">
                 <input
-                  type='text' 
-                  placeholder={(key in attributes) ? attributes[key] : "-"} 
+                  type='text'
+                  placeholder={(key in attributes) ? attributes[key] : "-"}
                   value={newAttributes[key]}
-                  onChange={e => setNewAttributes({...newAttributes, [key]: e.target.value})} 
+                  onChange={e => setNewAttributes({ ...newAttributes, [key]: e.target.value })}
                 />
               </div>
               <div className="reset-btn-container">
                 <button className="reset-btn" onClick={() => setNewAttributes({
-                    ...newAttributes, 
-                    [key]: (key in attributes) ? attributes[key] : ''
+                  ...newAttributes,
+                  [key]: (key in attributes) ? attributes[key] : ''
                 })}>
                   Reset
                 </button>
               </div>
-              
+
             </div>
           </div>
         ))}
@@ -95,7 +95,7 @@ const Profile = () => {
           <button className="submit-btn" onClick={updateAttributes}> Submit </button>
         </div>
       </div>
-      <ToastContainer className="toast"/>
+      <ToastContainer className="toast" />
     </div>
   )
 }
