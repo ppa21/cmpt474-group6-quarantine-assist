@@ -2,7 +2,9 @@ import React from "react"
 
 const Home = () => {
     return (
-        <div><h1>Welcome to Quarantine Assist!</h1></div>
+        <div className="container">
+            <h1>Welcome to Quarantine Assist!</h1>
+        </div>
 
     )
 }

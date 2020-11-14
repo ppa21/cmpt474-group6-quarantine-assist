@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Auth } from 'aws-amplify'
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
+import Loader from 'react-loader-spinner'
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 const Task = () => {
   const [title, setTitle] = useState('')
@@ -63,23 +65,31 @@ const Task = () => {
   }
 
   return (
-    <div>
-      {isNewTask &&
-        <form onSubmit={handleSubmit}>
-          <h4>New Task</h4>
-          <label>Title</label>
-          <input type='text' value={title} onChange={e => setTitle(e.target.value)} />
-          <label>Description</label>
-          <textarea type='text' value={description} onChange={e => setDescription(e.target.value)} />
-          <input type="submit" value='Create' />
-        </form>
-      }
-      {task.id &&
-        <div>
-          <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
-          <p>{task.description}</p>
+    <div className="container">
+      <div className="all-tasks-container">
+        {Object.keys(task).length === 0 && <div className="spinner">
+          <Loader type="Oval" color="#008cff"/>
         </div>
-      }
+        }
+        {task.title && <div className="task-container">
+          {isNewTask &&
+            <form onSubmit={handleSubmit}>
+              <h4>New Task</h4>
+              <label>Title</label>
+              <input type='text' value={title} onChange={e => setTitle(e.target.value)} />
+              <label>Description</label>
+              <textarea type='text' value={description} onChange={e => setDescription(e.target.value)} />
+              <input type="submit" value='Create' />
+            </form>
+          }
+          {task.id &&
+            <div>
+              <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
+              <p>{task.description}</p>
+            </div>
+          }
+        </div>}
+      </div>
     </div>
   )
 }

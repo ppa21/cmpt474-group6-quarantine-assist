@@ -1,0 +1,41 @@
+.all-tasks-container{
+    max-width: 800px;
+    width: 80%;
+}
+
+.task-container{
+    justify-content:center;
+    border-radius: 20px;
+    border: 2px solid rgb(105, 105, 105);
+    padding: 15px 20px 15px 20px;
+    margin: 20px 0 15px 0;
+    cursor: pointer;
+}
+
+.task-title{
+    padding: 2px 0 10px 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.task-desc{
+    padding: 0 5px 0 5px;
+}
+
+.create-btn-container{
+    /* border: 2px solid purple; */
+    width: 100%;
+    display:flex;
+    justify-content: flex-end;
+}
+
+.create-btn{
+    position: relative;
+    right: 20px;
+}
+
+.spinner{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height: 200px;
+}
