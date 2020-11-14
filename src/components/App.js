@@ -44,7 +44,7 @@ const App = () => {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link> 
                       <Link to="/contact">Contact</Link>
-                      <Link to="tasks/all">Tasks</Link>
+                      <Link to="/tasks/all">Tasks</Link>
                       <Link to="/profile">Profile</Link>
                       {loggedIn ? <AmplifySignOut /> : ""}
                       {/* {loggedIn && <AmplifySignOut />} */}
@@ -57,7 +57,7 @@ const App = () => {
                       <Link to="/login">Login</Link>
                       <Link to="/videos">Videos</Link>
                       <Link to="/contact">Contact</Link>
-                      <Link to="tasks/all">Tasks</Link>
+                      <Link to="/tasks/all">Tasks</Link>
                       <Link to="/profile">Profile</Link>
                       <AmplifySignOut /> 
                   </Navigation>

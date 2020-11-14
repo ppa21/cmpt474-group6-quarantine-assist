@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Auth } from 'aws-amplify'
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
+import Loader from 'react-loader-spinner'
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import "./Task.css"
 
 const Task = () => {
   const [title, setTitle] = useState('')
@@ -63,23 +66,46 @@ const Task = () => {
   }
 
   return (
-    <div>
-      {isNewTask &&
-        <form onSubmit={handleSubmit}>
-          <h4>New Task</h4>
-          <label>Title</label>
-          <input type='text' value={title} onChange={e => setTitle(e.target.value)} />
-          <label>Description</label>
-          <textarea type='text' value={description} onChange={e => setDescription(e.target.value)} />
-          <input type="submit" value='Create' />
-        </form>
-      }
-      {task.id &&
-        <div>
-          <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
-          <p>{task.description}</p>
+    <div className="container">
+      <div className="all-tasks-container">
+        {!isNewTask && !task.id && <div className="spinner">
+          <Loader type="Oval" color="#008cff"/>
         </div>
-      }
+        }
+        
+          {isNewTask &&
+          <div className="task-container">
+            <form onSubmit={handleSubmit}>
+              <h4>New Task</h4>
+              <div className="title">
+                <div className="label-container">
+                  <label>Title</label>
+                </div>
+                <input className="title-input"
+                  type='text' value={title} onChange={e => setTitle(e.target.value)} />
+              </div>
+              <div className="description">
+                <div className="label-container">
+                  <label>Description</label>
+                </div>
+                <textarea className="desc-input"
+                  type='text' value={description} onChange={e => setDescription(e.target.value)} />
+              </div>
+              <div className="create-container">
+                <input type="submit" value='Create' />
+              </div>
+            </form>
+          </div>
+          }
+          {task.id &&
+          <div className="task-container">
+            <div>
+              <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
+              <p>{task.description}</p>
+            </div>
+          </div>
+          }
+      </div>
     </div>
   )
 }

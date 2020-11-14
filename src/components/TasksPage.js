@@ -5,9 +5,12 @@ import axios from 'axios'
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
+import Loader from 'react-loader-spinner'
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import './TasksPage.css'
 
 Amplify.configure(awsmobile);
-const Landing = () => {
+const TasksPage = () => {
   const [tasks, setTasks] = useState([])
   const history = useHistory()
 
@@ -41,28 +44,29 @@ const Landing = () => {
   }
 
   return (
-    <div>
+    <div className="container">
+      <div className="all-tasks-container">
       <h1>Latest tasks</h1>
-      <Link to='/task/new'><button>Create task</button></Link>
-      {tasks.sort(compare).map(task => (
-        <div
-          key={task.id}
-          onClick={() => history.push(`/task/${task.id}`)}
-          style={{
-            marginBottom: '15px',
-            background: '#d7f5df',
-            borderRadius: '3px',
-            padding: '3px',
-            cursor: 'pointer'
-          }}
-        >
-          <h4>{task.title}</h4>
-          <p>{task.description}</p>
-        </div>
-      ))}
+      {!tasks.length && <div className="spinner">
+        <Loader type="Oval" color="#008cff"/>
+      </div>}
+        
+        {tasks.sort(compare).map(task => (
+          <div 
+            className="task-container"
+            key={task.id}
+            onClick={() => history.push(`/task/${task.id}`)}
+          >
+            <div className="task-title">{task.title}</div>
+            <div className="task-desc">{task.description}</div>
+          </div>
+        ))}
+      <div className="create-btn-container">
+        <Link to='/task/new'><button className='create-btn'>Create task</button></Link>
+      </div>
+      </div>
     </div>
   )
 }
 
-export default withAuthenticator(Landing, false);
-// export default Landing
+export default withAuthenticator(TasksPage, false);
