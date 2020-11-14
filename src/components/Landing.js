@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify'
 import { useHistory, Link } from 'react-router-dom'
 import axios from 'axios'
+import Amplify from 'aws-amplify';
+import awsmobile from './aws-exports';
+import { withAuthenticator } from 'aws-amplify-react';
 
+Amplify.configure(awsmobile);
 const Landing = () => {
   const [tasks, setTasks] = useState([])
   const history = useHistory()
@@ -60,4 +64,5 @@ const Landing = () => {
   )
 }
 
-export default Landing
+export default withAuthenticator(Landing, false);
+// export default Landing
