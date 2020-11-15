@@ -11,7 +11,7 @@ Amplify.configure(awsmobile);
 class Login extends Component {
   render() {
     return (
-      <div className="Login" className="container">
+      <div className="Login container">
         <header className="Login-header">
           <h1>Logged in</h1>
         </header>
