@@ -26,6 +26,7 @@
     width: 100%;
     display:flex;
     justify-content: flex-end;
+    padding-bottom: 50px;
 }
 
 .create-btn{
