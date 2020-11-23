@@ -59,6 +59,13 @@ const Task = () => {
         }
       )
       console.log(response.data)
+      // Call the Tasks endpoint with Cache-control: max-age=0 to invalidate the tasks cache
+      axios.get(
+        `${process.env.REACT_APP_API_URL}/task`,
+        {
+          headers: { 'Authorization': idToken, 'Cache-control': 'max-age=0' }
+        }
+      )
       history.push(`/task/${response.data.id}`)
     } catch (err) {
       console.error(err)
