@@ -97,11 +97,12 @@ const Task = () => {
           </form>
         </div>
       }
-      {task.id &&
+      {!isNewTask && task.id &&
         <div className="task-container">
           <div>
-            <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
-            <p>{task.description}</p>
+            <div className="task-title">{task.title}</div>
+            <div className='task-created-at'>Posted {parseDate(task.created_at)}</div>
+            <div className="task-desc">{task.description}</div>
           </div>
         </div>
       }
