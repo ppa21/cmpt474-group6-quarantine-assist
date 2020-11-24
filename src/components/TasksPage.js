@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify'
 import { useHistory, Link } from 'react-router-dom'
 import axios from 'axios'
+import AWS from 'aws-sdk';
 import Amplify from 'aws-amplify';
-import awsmobile from './aws-exports';
+import {awsmobile, awsconfig} from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import TaskItem from './TaskItem'
 import './TasksPage.css'
 
+AWS.config.update(awsconfig);
 Amplify.configure(awsmobile);
 const TasksPage = () => {
   const [tasks, setTasks] = useState([])
@@ -43,6 +46,7 @@ const TasksPage = () => {
     else return 0
   }
 
+
   return (
     <div className="container">
       <h1>Latest tasks</h1>
@@ -51,14 +55,14 @@ const TasksPage = () => {
       </div>}
 
       {tasks.sort(compare).map(task => (
-        <div
+        <TaskItem 
           className="task-container"
           key={task.id}
-          onClick={() => history.push(`/task/${task.id}`)}
-        >
-          <div className="task-title">{task.title}</div>
-          <div className="task-desc">{task.description}</div>
-        </div>
+          handleClick={() => history.push(`/task/${task.id}`)}
+          title={task.title}          
+          desc={task.description}
+          user_id={task.user_id}
+        />
       ))}
       <div className="create-btn-container">
         <Link to='/task/new'><button className='create-btn'>Create task</button></Link>
