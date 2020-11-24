@@ -31,3 +31,13 @@
     justify-content: flex-end;
     padding-bottom: 10px;
 }
+
+.task-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.task-actions button:first-child {
+    margin-right: 10px;
+}

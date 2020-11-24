@@ -61,6 +61,47 @@ const Task = () => {
     }
   }
 
+  const userCreatedTask = async () => {
+    const userInfo = await Auth.currentUserInfo()
+    return task.user_id === userInfo.attributes.sub
+  }
+
+  const editTask = async e => {
+    e.preventDefault()
+    try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
+        {
+          headers: { 'Authorization': idToken }
+        }
+      )
+      console.log(response.data)
+      history.push(`/tasks`)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const deleteTask = async e => {
+    e.preventDefault()
+    try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
+        {
+          headers: { 'Authorization': idToken }
+        }
+      )
+      console.log(response.data)
+      history.push(`/tasks/all`)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const parseDate = isoDate => {
     const date = new Date(isoDate)
     return date.toString().split(' ').slice(0, 5).join(' ')
@@ -97,6 +138,14 @@ const Task = () => {
           </form>
         </div>
       }
+
+      {!isNewTask && task.id && userCreatedTask() &&
+        <div className='task-actions'>
+          <button onClick={editTask}>Edit task</button>
+          <button onClick={deleteTask}>Delete task</button>
+        </div>
+      }
+
       {!isNewTask && task.id &&
         <div className="task-container">
           <div>

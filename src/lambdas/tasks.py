@@ -3,6 +3,13 @@ import datetime
 import json
 import uuid
 
+def is_user_sub_present(event):
+    return (
+        'authorizer' in event['requestContext'] and
+        'claims' in event['requestContext']['authorizer'] and
+        'sub' in event['requestContext']['authorizer']['claims']
+    )
+
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Tasks')
@@ -14,7 +21,11 @@ def lambda_handler(event, context):
     if event['httpMethod'] == 'GET':
         if event['pathParameters']:
             # get one item
-            item = table.get_item(Key=dict(id=event['pathParameters']['id']))
+            item = table.get_item(
+                Key={
+                    'id': event['pathParameters']['id']
+                }
+            )
             return dict(
                 statusCode=200,
                 headers=headers,
@@ -31,19 +42,13 @@ def lambda_handler(event, context):
             )
     
     elif event['httpMethod'] == 'POST':
-        # create one item
         body = json.loads(event['body'])
         try:
-            # get user sub
-            if not (
-                'authorizer' in event['requestContext'] and
-                'claims' in event['requestContext']['authorizer'] and
-                'sub' in event['requestContext']['authorizer']['claims']
-            ):
+            if not is_user_sub_present:
                 return dict(
                     statusCode=401,
                     headers=headers,
-                    body='authorized user'
+                    body='unauthorized user'
                 )
                 
             user_sub = event['requestContext']['authorizer']['claims']['sub']
@@ -55,9 +60,10 @@ def lambda_handler(event, context):
                 updated_at=now,
                 user_id=user_sub
             )
+            # create one item
             table.put_item(Item=item)
             return dict(
-                statusCode=200,
+                statusCode=201,
                 headers=headers,
                 body=json.dumps(item)
             )
@@ -68,6 +74,30 @@ def lambda_handler(event, context):
                 headers=headers,
                 body='`title` and `description` are required'
             )
+    
+    elif event['httpMethod'] == 'DELETE' and event['pathParameters']:
+        if not is_user_sub_present:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body='unauthorized user'
+            )
+        
+        # only delete item if user sub matches task's user id
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
+        table.delete_item(
+            Key={
+                'id': event['pathParameters']['id']
+            },
+            ConditionExpression='user_id = :user_sub',
+            ExpressionAttributeValues={
+                ':user_sub': user_sub
+            }
+        )
+        return dict(
+            statusCode=200,
+            headers=headers
+        )
     
     return dict(
         statusCode=200,
