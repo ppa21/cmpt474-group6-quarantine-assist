@@ -1,0 +1,33 @@
+.title{
+    display: flex;
+    justify-content: flex-start;
+    max-width: 700px;
+    padding: 20px 10px 20px 10px;
+}
+
+.description{
+    display: flex;
+    max-width: 700px;
+    padding: 20px 10px 20px 10px;
+}
+
+.title-input{
+    width: 67%;
+}
+
+.desc-input{
+    width: 70%;
+    height: 100px;
+}
+
+.label-container{
+    /* display: flex; */
+    width: 100px;
+}
+
+.create-container{
+    max-width: 600px;
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 10px;
+}

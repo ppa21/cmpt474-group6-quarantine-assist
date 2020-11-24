@@ -1,0 +1,29 @@
+.container{
+    display:flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.info-boxes {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.info-boxes h4 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: 0;
+}
+
+.info-boxes a {
+    margin-left: 5px;
+}
+
+.info-box {
+    border-radius: 5px;
+    border: 2px solid rgb(105, 105, 105);
+    margin: 5px;
+    width: calc( (100% / 2) - 40px );
+    padding: 10px;
+}

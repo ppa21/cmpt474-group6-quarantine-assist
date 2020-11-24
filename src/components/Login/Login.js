@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Amplify from 'aws-amplify';
-import awsmobile from '../aws-exports';
+import {awsmobile} from '../aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import "./login.css"
 
 // richardtest
 // Adminpassword123~
 
-// Amplify.configure(awsmobile);
+Amplify.configure(awsmobile);
 class Login extends Component {
-  render(){
+  render() {
     return (
-      <div class="Login">
+      <div className="Login container">
         <header className="Login-header">
           <h1>Logged in</h1>
         </header>
@@ -20,5 +20,5 @@ class Login extends Component {
   }
 }
 
-// export default withAuthenticator(Login, true);
-export default Login;
+export default withAuthenticator(Login, false);
+// export default Login;
