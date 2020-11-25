@@ -45,3 +45,21 @@
 .task-actions button:first-child {
     margin-right: 10px;
 }
+
+.task-by {
+    color: #3b5aa5;
+    font-size: 0.875em;
+    margin: 5px 0 10px 0;
+}
+
+.task-by-created-at {
+    display: inline;
+    margin-left: 5px;
+}
+
+.task-attr-label {    
+    margin: 5px 0;
+}
+.task-attr-label span {
+    font-weight: 600;
+}

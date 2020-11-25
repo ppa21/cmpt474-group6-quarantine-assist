@@ -13,6 +13,7 @@ def is_user_sub_present(event):
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Tasks')
+    cognito = boto3.client('cognito-idp')
     now = datetime.datetime.utcnow().isoformat() + 'Z'
     headers = {
         'Access-Control-Allow-Origin': '*',
@@ -21,12 +22,46 @@ def lambda_handler(event, context):
     
     if event['httpMethod'] == 'GET':
         if event['pathParameters']:
+            if not is_user_sub_present:
+                return dict(
+                    statusCode=401,
+                    headers=headers,
+                    body='unauthorized user'
+                )
+
             # get one item
             item = table.get_item(
                 Key={
                     'id': event['pathParameters']['id']
                 }
             )
+            
+            user_pool_id = event['requestContext']['authorizer']['claims']['iss'].split('/')[-1]
+            current_user_sub = event['requestContext']['authorizer']['claims']['sub']
+            task_user_sub = item['Item']['user_id']
+            response = cognito.list_users(
+                UserPoolId=user_pool_id,
+                Filter='sub = "' + task_user_sub + '"',
+            )
+
+            #TODO also get the volunteer user by volunteer_id if one exists
+ 
+            task_user = response['Users'][0]
+            user = {
+                'username': task_user['Username']
+            }
+            if task_user_sub == current_user_sub: #TODO add OR if the current_use_sub is the same as volunteer_id if one exists
+                user['email'] = [a for a in task_user['Attributes'] if a['Name'] == 'email'][0]['Value']
+                #TODO add user[volunteer_email] if a volunteer exists
+
+            for attribute in task_user['Attributes']:
+                if attribute['Name'] in ('nickname', 'given_name', 'family_name'):
+                    user[attribute['Name']] = attribute['Value']
+                
+            
+            item['Item']['user'] = user
+            item['Item']['requestContext'] = event['requestContext']
+
             return dict(
                 statusCode=200,
                 headers=headers,

@@ -69,10 +69,10 @@ const Task = () => {
     event.preventDefault();
 
     // for(var e : event) {
-      
+
     // }
 
-    if(event === null) {
+    if (event === null) {
       alert("can't be null.")
       return false
     } else {
@@ -83,7 +83,7 @@ const Task = () => {
   const handleSubmit = async e => {
     e.preventDefault()
 
-    if(title.trim() !== "") {
+    if (title.trim() !== "") {
       try {
         const sessionObject = await Auth.currentSession();
         const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
@@ -101,7 +101,7 @@ const Task = () => {
         console.log(response.data)
 
         invalidateTasksCache(idToken);
-  
+
         history.push(`/task/${response.data.id}`)
       } catch (err) {
         console.error(err)
@@ -134,7 +134,7 @@ const Task = () => {
     } catch (err) {
       console.error(err)
     }
-  } 
+  }
 
   const parseDate = isoDate => {
     const date = new Date(isoDate)
@@ -181,7 +181,7 @@ const Task = () => {
               />
             </div>
             <div className="create-container">
-              <input type="submit" value='Create' onClick={e => setStatus("Open")}/>
+              <input type="submit" value='Create' onClick={e => setStatus("Open")} />
             </div>
           </form>
         </div>
@@ -191,11 +191,15 @@ const Task = () => {
         <div className="task-container">
           <div>
             <div className="task-title">{task.title}</div>
-            <div className='task-created-at'>
-              Posted {parseDate(task.created_at)}
-              {task.updated_at > task.created_at && ' (edited)'}
+            <div className='task-by'>
+              Posted by <b>{task.user.nickname || task.user.given_name || task.user.username}</b>
+              <div className='task-by-created-at'>
+                - Posted {parseDate(task.created_at)}
+                {task.updated_at > task.created_at && ' (edited)'}
+              </div>
             </div>
-            <h4>Status: {task.status}</h4>
+            <div className="task-attr-label"><span>Status:</span> {task.status}</div>
+            <div className="task-attr-label"><span>Description:</span></div>
             {ownsTask
               ? <textarea
                 className='edit-description'
@@ -204,6 +208,12 @@ const Task = () => {
                 onChange={e => setDescription(e.target.value)}
               />
               : <div className="task-desc">{task.description}</div>
+            }
+            {task.user.email &&
+              <div className="task-attr-label"><span>Email:</span> <a href={"mailto:" + task.user.email}>{task.user.email}</a></div>
+            }
+            {task.user.volunteer_email &&
+              <div className="task-attr-label"><span>Volunteer Email:</span><a href={"mailto:" + task.user.volunteer_email}>{task.user.volunteer_email}</a></div>
             }
           </div>
         </div>
