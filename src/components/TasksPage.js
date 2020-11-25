@@ -54,7 +54,10 @@ const TasksPage = () => {
           key={task.id}
         >
           <div className="task-title">{task.title}</div>
-          <div className='task-created-at'>Posted {parseDate(task.created_at)}</div>
+          <div className='task-created-at'>
+            Posted {parseDate(task.created_at)}
+            {task.updated_at > task.created_at && ' (edited)'}
+          </div>
           <div className="task-desc">{task.description}</div>
         </Link>
       ))}

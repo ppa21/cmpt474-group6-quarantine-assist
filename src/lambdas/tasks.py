@@ -42,15 +42,15 @@ def lambda_handler(event, context):
             )
     
     elif event['httpMethod'] == 'POST':
-        body = json.loads(event['body'])
-        try:
-            if not is_user_sub_present:
-                return dict(
-                    statusCode=401,
-                    headers=headers,
-                    body='unauthorized user'
-                )
-                
+        if not is_user_sub_present:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body='unauthorized user'
+            )
+
+        try: 
+            body = json.loads(event['body'])
             user_sub = event['requestContext']['authorizer']['claims']['sub']
             item = dict(
                 id=str(uuid.uuid4()),
@@ -74,6 +74,35 @@ def lambda_handler(event, context):
                 headers=headers,
                 body='`title` and `description` are required'
             )
+
+    elif event['httpMethod'] == 'PUT' and event['pathParameters']:
+        if not is_user_sub_present:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body='unauthorized user'
+            )
+        
+        # only update item if user sub matches task's user id
+        body = json.loads(event['body'])
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
+        table.update_item(
+            Key={
+                'id': event['pathParameters']['id']
+            },
+            UpdateExpression='set description = :description, updated_at = :now',
+            ConditionExpression='user_id = :user_sub',
+            ExpressionAttributeValues={
+                ':description': body['description'],
+                ':now': now,
+                ':user_sub': user_sub
+            }
+        )
+        return dict(
+            statusCode=200,
+            headers=headers
+        )
+
     
     elif event['httpMethod'] == 'DELETE' and event['pathParameters']:
         if not is_user_sub_present:

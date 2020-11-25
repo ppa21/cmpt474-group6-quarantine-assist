@@ -20,6 +20,11 @@
     height: 100px;
 }
 
+.edit-description {
+    width: 100%;
+    height: 100px;
+}
+
 .label-container{
     /* display: flex; */
     width: 100px;
@@ -33,7 +38,6 @@
 }
 
 .task-actions {
-    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
 }
