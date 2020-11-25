@@ -38,7 +38,7 @@ const TasksPage = () => {
 
   return (
     <div className="container tasks">
-      <h1>Latest tasks</h1>
+      <h1 className="custom-h1">Latest tasks</h1>
       <div className="create-btn-container">
         <Link to='/task/new'><button className='create-btn'>New task</button></Link>
       </div>
