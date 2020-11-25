@@ -12,6 +12,7 @@ const Task = () => {
   const [description, setDescription] = useState('')
   const [task, setTask] = useState({})
   const [ownsTask, setOwnsTask] = useState(false)
+  const [status, setStatus] = useState('')
 
   const history = useHistory()
   const location = useLocation()
@@ -52,7 +53,8 @@ const Task = () => {
         `${process.env.REACT_APP_API_URL}/task`,
         {
           title,
-          description
+          description,
+          status
         },
         {
           headers: { 'Authorization': idToken }
@@ -158,7 +160,7 @@ const Task = () => {
               />
             </div>
             <div className="create-container">
-              <input type="submit" value='Create' />
+              <input type="submit" value='Create' onClick={e => setStatus("Open")}/>
             </div>
           </form>
         </div>
@@ -172,6 +174,7 @@ const Task = () => {
               Posted {parseDate(task.created_at)}
               {task.updated_at > task.created_at && ' (edited)'}
             </div>
+            <h4>Status: {task.status}</h4>
             {ownsTask
               ? <textarea
                 className='edit-description'

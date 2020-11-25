@@ -59,7 +59,8 @@ def lambda_handler(event, context):
                 description=body['description'],
                 created_at=now,
                 updated_at=now,
-                user_id=user_sub
+                user_id=user_sub,
+                status=body['status']
             )
             # create one item
             table.put_item(Item=item)
