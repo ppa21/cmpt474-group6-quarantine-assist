@@ -55,9 +55,27 @@ const Task = () => {
         }
       )
       console.log(response.data)
+
+      invalidateTasksCache(idToken);
+
       history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  const validationCheck = async event => {
+    event.preventDefault();
+
+    // for(var e : event) {
+      
+    // }
+
+    if(event === null) {
+      alert("can't be null.")
+      return false
+    } else {
+      return true
     }
   }
 
@@ -79,7 +97,10 @@ const Task = () => {
           }
         )
         console.log(response.data)
-        history.push(`/tasks/all`)
+
+        invalidateTasksCache(idToken);
+  
+        history.push(`/task/${response.data.id}`)
       } catch (err) {
         console.error(err)
       }
@@ -103,31 +124,29 @@ const Task = () => {
           headers: { 'Authorization': idToken }
         }
       )
+
+      invalidateTasksCache(idToken);
+
       console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
     }
-  }
-
-  const validationCheck = async event => {
-    event.preventDefault();
-
-    // for(var e : event) {
-      
-    // }
-
-    if(event === null) {
-      alert("can't be null.")
-      return false
-    } else {
-      return true
-    }
-  }
+  } 
 
   const parseDate = isoDate => {
     const date = new Date(isoDate)
     return date.toString().split(' ').slice(0, 5).join(' ')
+  }
+
+  const invalidateTasksCache = idToken => {
+    // Call the Tasks endpoint with Cache-control: max-age=0 to invalidate the tasks cache
+    axios.get(
+      `${process.env.REACT_APP_API_URL}/task`,
+      {
+        headers: { 'Authorization': idToken, 'Cache-control': 'max-age=0' }
+      }
+    )
   }
 
   return (
