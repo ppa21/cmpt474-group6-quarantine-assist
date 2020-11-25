@@ -11,12 +11,13 @@ const Task = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [task, setTask] = useState({})
+  const [ownsTask, setOwnsTask] = useState(false)
 
   const history = useHistory()
   const location = useLocation()
   const isNewTask = location.pathname.split('/')[2] === 'new'
 
-  useEffect(() => {
+  useEffect(async () => {
     async function fetchTask() {
       const id = location.pathname.split('/')[2]
       const sessionObject = await Auth.currentSession();
@@ -29,14 +30,19 @@ const Task = () => {
           }
         )
         console.log(response.data)
-        setTask(response.data)
-        setDescription(response.data.description)
+        return response
       } catch (err) {
         console.error(err)
       }
     }
 
-    if (!isNewTask) fetchTask()
+    if (!isNewTask) {
+      const response = await fetchTask()
+      const userInfo = await Auth.currentUserInfo()
+      setOwnsTask(response.data.user_id === userInfo.attributes.sub)
+      setTask(response.data)
+      setDescription(response.data.description)
+    }
 
   }, [isNewTask, location.pathname])
 
@@ -60,11 +66,6 @@ const Task = () => {
     } catch (err) {
       console.error(err)
     }
-  }
-
-  const userCreatedTask = async () => {
-    const userInfo = await Auth.currentUserInfo()
-    return task.user_id === userInfo.attributes.sub
   }
 
   const updateTask = async e => {
@@ -155,7 +156,7 @@ const Task = () => {
               Posted {parseDate(task.created_at)}
               {task.updated_at > task.created_at && ' (edited)'}
             </div>
-            {userCreatedTask()
+            {ownsTask
               ? <textarea
                 className='edit-description'
                 type='text'
@@ -168,7 +169,7 @@ const Task = () => {
         </div>
       }
 
-      {!isNewTask && task.id && userCreatedTask() &&
+      {!isNewTask && task.id && ownsTask &&
         <div className='task-actions'>
           <button onClick={updateTask}>Update task</button>
           <button onClick={deleteTask}>Delete task</button>
