@@ -43,25 +43,49 @@ const Task = () => {
 
   }, [isNewTask, location.pathname])
 
-  const handleSubmit = async e => {
+  const deleteTask = async e => {
     e.preventDefault()
     try {
       const sessionObject = await Auth.currentSession();
       const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/task`,
-        {
-          title,
-          description
-        },
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
         {
           headers: { 'Authorization': idToken }
         }
       )
       console.log(response.data)
-      history.push(`/task/${response.data.id}`)
+      history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    if(title.trim() !== "") {
+      try {
+        const sessionObject = await Auth.currentSession();
+        const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/task`,
+          {
+            title,
+            description
+          },
+          {
+            headers: { 'Authorization': idToken }
+          }
+        )
+        console.log(response.data)
+        history.push(`/tasks/all`)
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      alert("Title can't be empty.");
+      return;
     }
   }
 
@@ -75,24 +99,6 @@ const Task = () => {
         {
           description
         },
-        {
-          headers: { 'Authorization': idToken }
-        }
-      )
-      console.log(response.data)
-      history.push(`/tasks/all`)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const deleteTask = async e => {
-    e.preventDefault()
-    try {
-      const sessionObject = await Auth.currentSession();
-      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
-      const response = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
         {
           headers: { 'Authorization': idToken }
         }
@@ -125,7 +131,7 @@ const Task = () => {
                 <label>Title</label>
               </div>
               <input className="title-input"
-                type='text' value={title} onChange={e => setTitle(e.target.value)} />
+                type='text' required value={title} onChange={e => setTitle(e.target.value)} />
             </div>
             <div className="description">
               <div className="label-container">
