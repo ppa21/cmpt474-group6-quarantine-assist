@@ -84,7 +84,6 @@ const Task = () => {
       )
 
       invalidateTasksCache(idToken);
-      invalidateTaskCache(idToken, task.id);
 
       console.log(response.data)
       history.push(`/tasks/all`)
@@ -123,16 +122,6 @@ const Task = () => {
     // Call the Tasks endpoint with Cache-control: max-age=0 to invalidate the tasks cache
     axios.get(
       `${process.env.REACT_APP_API_URL}/task`,
-      {
-        headers: { 'Authorization': idToken, 'Cache-control': 'max-age=0' }
-      }
-    )
-  }
-
-  const invalidateTaskCache = (idToken, taskId) => {
-    // Call the Task/{id} endpoint with Cache-control: max-age=0 to invalidate the task cache
-    axios.get(
-      `${process.env.REACT_APP_API_URL}/task/${taskId}`,
       {
         headers: { 'Authorization': idToken, 'Cache-control': 'max-age=0' }
       }
