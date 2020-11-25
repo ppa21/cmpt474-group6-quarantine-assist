@@ -43,17 +43,13 @@ const Task = () => {
 
   }, [isNewTask, location.pathname])
 
-  const handleSubmit = async e => {
+  const deleteTask = async e => {
     e.preventDefault()
     try {
       const sessionObject = await Auth.currentSession();
       const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/task`,
-        {
-          title,
-          description
-        },
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
         {
           headers: { 'Authorization': idToken }
         }
@@ -62,9 +58,55 @@ const Task = () => {
 
       invalidateTasksCache(idToken);
 
-      history.push(`/task/${response.data.id}`)
+      history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  const validationCheck = async event => {
+    event.preventDefault();
+
+    // for(var e : event) {
+      
+    // }
+
+    if(event === null) {
+      alert("can't be null.")
+      return false
+    } else {
+      return true
+    }
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    if(title.trim() !== "") {
+      try {
+        const sessionObject = await Auth.currentSession();
+        const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/task`,
+          {
+            title,
+            description
+          },
+          {
+            headers: { 'Authorization': idToken }
+          }
+        )
+        console.log(response.data)
+
+        invalidateTasksCache(idToken);
+  
+        history.push(`/task/${response.data.id}`)
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      alert("Title can't be empty.");
+      return;
     }
   }
 
@@ -90,28 +132,7 @@ const Task = () => {
     } catch (err) {
       console.error(err)
     }
-  }
-
-  const deleteTask = async e => {
-    e.preventDefault()
-    try {
-      const sessionObject = await Auth.currentSession();
-      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
-      const response = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
-        {
-          headers: { 'Authorization': idToken }
-        }
-      )
-      console.log(response.data)
-
-      invalidateTasksCache(idToken);
-
-      history.push(`/tasks/all`)
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  } 
 
   const parseDate = isoDate => {
     const date = new Date(isoDate)
@@ -144,7 +165,7 @@ const Task = () => {
                 <label>Title</label>
               </div>
               <input className="title-input"
-                type='text' value={title} onChange={e => setTitle(e.target.value)} />
+                type='text' required value={title} onChange={e => setTitle(e.target.value)} />
             </div>
             <div className="description">
               <div className="label-container">
