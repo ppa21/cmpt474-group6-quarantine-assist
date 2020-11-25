@@ -11,6 +11,7 @@ const Task = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [task, setTask] = useState({})
+  const [ownsTask, setOwnsTask] = useState(false)
 
   const history = useHistory()
   const location = useLocation()
@@ -29,7 +30,10 @@ const Task = () => {
           }
         )
         console.log(response.data)
+        const userInfo = await Auth.currentUserInfo()
+        setOwnsTask(response.data.user_id === userInfo.attributes.sub)
         setTask(response.data)
+        setDescription(response.data.description)
       } catch (err) {
         console.error(err)
       }
@@ -56,6 +60,45 @@ const Task = () => {
       )
       console.log(response.data)
       history.push(`/task/${response.data.id}`)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const updateTask = async e => {
+    e.preventDefault()
+    try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
+        {
+          description
+        },
+        {
+          headers: { 'Authorization': idToken }
+        }
+      )
+      console.log(response.data)
+      history.push(`/tasks/all`)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const deleteTask = async e => {
+    e.preventDefault()
+    try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}`,
+        {
+          headers: { 'Authorization': idToken }
+        }
+      )
+      console.log(response.data)
+      history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
     }
@@ -88,8 +131,12 @@ const Task = () => {
               <div className="label-container">
                 <label>Description</label>
               </div>
-              <textarea className="desc-input"
-                type='text' value={description} onChange={e => setDescription(e.target.value)} />
+              <textarea
+                className="desc-input"
+                type='text'
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
             </div>
             <div className="create-container">
               <input type="submit" value='Create' />
@@ -97,12 +144,32 @@ const Task = () => {
           </form>
         </div>
       }
-      {task.id &&
+
+      {!isNewTask && task.id &&
         <div className="task-container">
           <div>
-            <h4>{task.title} (Last updated: {parseDate(task.updated_at)})</h4>
-            <p>{task.description}</p>
+            <div className="task-title">{task.title}</div>
+            <div className='task-created-at'>
+              Posted {parseDate(task.created_at)}
+              {task.updated_at > task.created_at && ' (edited)'}
+            </div>
+            {ownsTask
+              ? <textarea
+                className='edit-description'
+                type='text'
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
+              : <div className="task-desc">{task.description}</div>
+            }
           </div>
+        </div>
+      }
+
+      {!isNewTask && task.id && ownsTask &&
+        <div className='task-actions'>
+          <button onClick={updateTask}>Update task</button>
+          <button onClick={deleteTask}>Delete task</button>
         </div>
       }
     </div>

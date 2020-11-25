@@ -1,9 +1,14 @@
 import boto3
 import datetime
 import json
-import random
-import string
 import uuid
+
+def is_user_sub_present(event):
+    return (
+        'authorizer' in event['requestContext'] and
+        'claims' in event['requestContext']['authorizer'] and
+        'sub' in event['requestContext']['authorizer']['claims']
+    )
 
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
@@ -16,7 +21,11 @@ def lambda_handler(event, context):
     if event['httpMethod'] == 'GET':
         if event['pathParameters']:
             # get one item
-            item = table.get_item(Key=dict(id=event['pathParameters']['id']))
+            item = table.get_item(
+                Key={
+                    'id': event['pathParameters']['id']
+                }
+            )
             return dict(
                 statusCode=200,
                 headers=headers,
@@ -33,38 +42,91 @@ def lambda_handler(event, context):
             )
     
     elif event['httpMethod'] == 'POST':
-        # create one item
-        body = json.loads(event['body'])
-        try:
-            user_sub = event['requestContext']['authorizer']['claims']['sub'];
-            if 'authorizer' in event['requestContext'] and 'claims' in event['requestContext']['authorizer']:
-                user_sub = event['requestContext']['authorizer']['claims'].get('sub', None)
-                if user_sub:
-                    item = dict(
-                        id=str(uuid.uuid4()),
-                        title=body['title'],
-                        description=body['description'],
-                        created_at=now,
-                        updated_at=now,
-                        user_id=user_sub
-                    )
-                    table.put_item(Item=item)
-                    return dict(
-                        statusCode=200,
-                        headers=headers,
-                        body=json.dumps(item)
-                    )
+        if not is_user_sub_present:
             return dict(
-                tatusCode=401,
+                statusCode=401,
                 headers=headers,
-                body='no authorized user'
+                body='unauthorized user'
             )
+
+        try: 
+            body = json.loads(event['body'])
+            user_sub = event['requestContext']['authorizer']['claims']['sub']
+            item = dict(
+                id=str(uuid.uuid4()),
+                title=body['title'],
+                description=body['description'],
+                created_at=now,
+                updated_at=now,
+                user_id=user_sub
+            )
+            # create one item
+            table.put_item(Item=item)
+            return dict(
+                statusCode=201,
+                headers=headers,
+                body=json.dumps(item)
+            )
+
         except KeyError as ex:
             return dict(
                 statusCode=400,
                 headers=headers,
                 body='`title` and `description` are required'
             )
+
+    elif event['httpMethod'] == 'PUT' and event['pathParameters']:
+        if not is_user_sub_present:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body='unauthorized user'
+            )
+        
+        # only update item if user sub matches task's user id
+        body = json.loads(event['body'])
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
+        table.update_item(
+            Key={
+                'id': event['pathParameters']['id']
+            },
+            UpdateExpression='set description = :description, updated_at = :now',
+            ConditionExpression='user_id = :user_sub',
+            ExpressionAttributeValues={
+                ':description': body['description'],
+                ':now': now,
+                ':user_sub': user_sub
+            }
+        )
+        return dict(
+            statusCode=200,
+            headers=headers
+        )
+
+    
+    elif event['httpMethod'] == 'DELETE' and event['pathParameters']:
+        if not is_user_sub_present:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body='unauthorized user'
+            )
+        
+        # only delete item if user sub matches task's user id
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
+        table.delete_item(
+            Key={
+                'id': event['pathParameters']['id']
+            },
+            ConditionExpression='user_id = :user_sub',
+            ExpressionAttributeValues={
+                ':user_sub': user_sub
+            }
+        )
+        return dict(
+            statusCode=200,
+            headers=headers
+        )
     
     return dict(
         statusCode=200,

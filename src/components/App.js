@@ -39,9 +39,6 @@ const App = () => {
                 <Header className="header-color" title="Quarantine Assist">
                     <Navigation>
                         <Link to="/">Home</Link>
-
-                        {/* <Link to="/videos">Videos</Link>  */}
-                        {/* <Link to="/contact">Contact</Link> */}
                         <Link to="/tasks/all">Tasks</Link>
                         <Link to="/profile">Profile</Link>
                         {!loggedIn ? <Link to="/login">Login</Link> : ""}
@@ -53,8 +50,6 @@ const App = () => {
                 <Drawer className="drawer-color" title="Navigate to">
                     <Navigation>
                         <Link to="/">Home</Link>
-                        {/* <Link to="/videos">Videos</Link> */}
-                        {/* <Link to="/contact">Contact</Link> */}
                         <Link to="/tasks/all">Tasks</Link>
                         <Link to="/profile">Profile</Link>
                         {!loggedIn ? <Link to="/login">Login</Link> : ""}
