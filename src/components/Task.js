@@ -110,6 +110,21 @@ const Task = () => {
     }
   }
 
+  const validationCheck = async event => {
+    event.preventDefault();
+
+    // for(var e : event) {
+      
+    // }
+
+    if(event === null) {
+      alert("can't be null.")
+      return false
+    } else {
+      return true
+    }
+  }
+
   const parseDate = isoDate => {
     const date = new Date(isoDate)
     return date.toString().split(' ').slice(0, 5).join(' ')
