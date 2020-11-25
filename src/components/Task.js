@@ -17,7 +17,7 @@ const Task = () => {
   const location = useLocation()
   const isNewTask = location.pathname.split('/')[2] === 'new'
 
-  useEffect(async () => {
+  useEffect(() => {
     async function fetchTask() {
       const id = location.pathname.split('/')[2]
       const sessionObject = await Auth.currentSession();
@@ -30,19 +30,16 @@ const Task = () => {
           }
         )
         console.log(response.data)
-        return response
+        const userInfo = await Auth.currentUserInfo()
+        setOwnsTask(response.data.user_id === userInfo.attributes.sub)
+        setTask(response.data)
+        setDescription(response.data.description)
       } catch (err) {
         console.error(err)
       }
     }
 
-    if (!isNewTask) {
-      const response = await fetchTask()
-      const userInfo = await Auth.currentUserInfo()
-      setOwnsTask(response.data.user_id === userInfo.attributes.sub)
-      setTask(response.data)
-      setDescription(response.data.description)
-    }
+    if (!isNewTask) fetchTask()
 
   }, [isNewTask, location.pathname])
 
