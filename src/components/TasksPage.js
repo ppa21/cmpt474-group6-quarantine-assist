@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import AWS from 'aws-sdk';
 import Amplify from 'aws-amplify';
-import {awsmobile, awsconfig} from './aws-exports';
+import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
-import TaskItem from './TaskItem'
 import './TasksPage.css'
 import { parseDate } from '../utils'
+import SearchBar from "./SearchBar"
 
-AWS.config.update(awsconfig);
 Amplify.configure(awsmobile);
 const TasksPage = () => {
   const [tasks, setTasks] = useState([])
+  const [filteredList, setFilteredList] = useState(tasks)
 
   useEffect(() => {
     console.log(process.env.REACT_APP_API_URL)
@@ -31,32 +30,73 @@ const TasksPage = () => {
         )
         console.log(response.data)
         setTasks(response.data)
+        setFilteredList(response.data)
       } catch (err) {
         console.error(err)
       }
     }
 
     fetchTasks()
-  }, [])
+  }, []) 
+
+  const handleChange = async e => {
+    var currentTaskList = [];
+    var newTaskList = [];
+
+    if (e.target.value !== "") {
+      currentTaskList = tasks; 
+
+      newTaskList = currentTaskList.filter(task => {
+        // console.log(task.title)
+        const title = task.title.toLowerCase();
+        const userInput = e.target.value.toLowerCase(); 
+        return title.includes(userInput);
+      });
+    } else { 
+        newTaskList = tasks; 
+    } 
+
+    setTasks(newTaskList)
+    // console.log("tasks", tasks)
+    // console.log("backup", filteredList)
+
+    if(e.target.value.trim() === "") {
+      setTasks(filteredList)
+    }
+  } 
 
   return (
     <div className="container tasks">
       <h1 className="custom-h1">Latest tasks</h1>
-      <div className="create-btn-container">
-        <Link to='/task/new'><button className='create-btn'>New task</button></Link>
+
+      <div className="grid-container">
+        <div className="grid-item">
+          <SearchBar placeholder="Search for a task..." handleChange={e => handleChange(e)} />
+          {/* <SearchBar placeholder="search" handleChange={e => resultingTasks(e)} />  */}
+        </div>
+        <div className="grid-item create-btn-container">
+          <Link to='/task/new'><button className='grid-item create-btn'>New task</button></Link>
+        </div>
       </div>
+
       {!tasks.length && <div className="spinner">
         <Loader type="Oval" color="#008cff" />
       </div>}
-      {tasks.sort(compare).map(task => (
-        <TaskItem 
+      {tasks
+        .sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)  // sort by (descending) created_at
+        .map(task => (
+        <Link
+          to={`/task/${task.id}`}
           className="task-container"
           key={task.id}
-          handleClick={() => history.push(`/task/${task.id}`)}
-          title={task.title}          
-          desc={task.description}
-          user_id={task.user_id}
-        />
+        >
+          <div className="task-title">{task.title}</div>
+          <div className='task-created-at'>
+            Posted {parseDate(task.created_at)}
+            {task.updated_at > task.created_at && ' (edited)'}
+          </div>
+          <div className="task-desc">{task.description}</div>
+        </Link>
       ))}
     </div>
   )

@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Profile.css';
 import Amplify from 'aws-amplify';
-import {awsmobile} from './aws-exports';
+import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 
 Amplify.configure(awsmobile);
