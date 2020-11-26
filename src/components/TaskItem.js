@@ -27,9 +27,7 @@ const TaskItem = ({id, title, desc, user_id, handleClick}) =>  {
                     var user = data.Users[0];
                     var attributes = user.Attributes;
                     setUser(attributes.reduce((obj, curr) => {
-                        obj = {...obj, [curr.Name]: curr.Value}
-                        console.log(obj)
-                        return obj
+                        return {...obj, [curr.Name]: curr.Value}
                     }, {}))
                 } else {
                     console.log("Something wrong.");
