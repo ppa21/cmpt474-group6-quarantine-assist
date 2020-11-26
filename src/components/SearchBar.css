@@ -1,0 +1,9 @@
+.search {
+    width: 500px;
+    text-align: left !important;
+    /* text-indent: 1px; */
+}
+
+input::placeholder {
+    text-indent: 1px;
+}
