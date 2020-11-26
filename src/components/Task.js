@@ -30,6 +30,7 @@ const Task = () => {
             headers: { 'Authorization': idToken }
           }
         )
+        console.log("HERE")
         console.log(response.data)
         const userInfo = await Auth.currentUserInfo()
         setOwnsTask(response.data.user_id === userInfo.attributes.sub)
@@ -82,7 +83,6 @@ const Task = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-
     if(title.trim() !== "") {
       try {
         const sessionObject = await Auth.currentSession();
@@ -135,6 +135,29 @@ const Task = () => {
       console.error(err)
     }
   } 
+
+  const volunteerForTask = async e => {
+    e.preventDefault()
+    try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}/volunteer`,
+        {status : 'Help Offered'},
+        {
+          headers: { 'Authorization': idToken }
+        }
+      )
+
+      invalidateTasksCache(idToken);
+
+      setTask((t) => ({...t, status: 'Help Offered'}))
+      console.log(response.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
 
   const parseDate = isoDate => {
     const date = new Date(isoDate)
@@ -211,6 +234,7 @@ const Task = () => {
 
       {!isNewTask && task.id && ownsTask &&
         <div className='task-actions'>
+          <button onClick={volunteerForTask}>Volunteer</button>
           <button onClick={updateTask}>Update task</button>
           <button onClick={deleteTask}>Delete task</button>
         </div>
