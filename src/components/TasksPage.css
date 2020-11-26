@@ -57,3 +57,9 @@
     /* padding: 0px; */
     /* position: fixed */
 }
+
+.grid-container {
+    display: grid;
+    /* margin-top: -15px; */
+    grid-template-columns: 700px 110px;
+  }
