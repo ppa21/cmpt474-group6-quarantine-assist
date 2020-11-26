@@ -1,24 +1,35 @@
-.all-tasks-container{
-    max-width: 800px;
-    width: 80%;
-}
-
 .task-container{
     justify-content:center;
     border-radius: 20px;
     border: 2px solid rgb(105, 105, 105);
     padding: 15px 20px 15px 20px;
-    margin: 20px 0 15px 0;
+    margin: 15px 0 5px 0;
     cursor: pointer;
+    text-decoration: none;
+}
+
+.task-container:last-of-type {
+    margin-bottom: 75px;
+}
+
+.tasks .task-container:hover .task-title {
+    text-decoration: underline;
 }
 
 .task-title{
-    padding: 2px 0 10px 0;
+    color: black;
     font-size: 1.5em;
     font-weight: bold;
 }
-.task-desc{
-    padding: 0 5px 0 5px;
+
+.task-created-at {
+    color: #5b7ecf;
+    font-size: 12.5px;
+    margin: 5px 0 10px 0;
+}
+
+.task-desc {
+    color: #5b7ecf;
 }
 
 .create-btn-container{
@@ -26,7 +37,7 @@
     width: 100%;
     display:flex;
     justify-content: flex-end;
-    padding-bottom: 50px;
+    padding-bottom: 5px;
 }
 
 .create-btn{
@@ -39,4 +50,10 @@
     justify-content:center;
     align-items:center;
     height: 200px;
+}
+
+.custom-h1 {
+    margin:10px 0px 10px 0px;
+    /* padding: 0px; */
+    /* position: fixed */
 }

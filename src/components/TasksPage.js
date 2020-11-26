@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify'
-import { useHistory, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import AWS from 'aws-sdk';
 import Amplify from 'aws-amplify';
@@ -10,12 +10,12 @@ import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import TaskItem from './TaskItem'
 import './TasksPage.css'
+import { parseDate } from '../utils'
 
 AWS.config.update(awsconfig);
 Amplify.configure(awsmobile);
 const TasksPage = () => {
   const [tasks, setTasks] = useState([])
-  const history = useHistory()
 
   useEffect(() => {
     console.log(process.env.REACT_APP_API_URL)
@@ -39,21 +39,15 @@ const TasksPage = () => {
     fetchTasks()
   }, [])
 
-  const compare = (a, b) => {
-    // sort by descending updated_at (most recent first)
-    if (a.updated_at < b.updated_at) return 1
-    else if (a.updated_at > b.updated_at) return -1
-    else return 0
-  }
-
-
   return (
-    <div className="container">
-      <h1>Latest tasks</h1>
+    <div className="container tasks">
+      <h1 className="custom-h1">Latest tasks</h1>
+      <div className="create-btn-container">
+        <Link to='/task/new'><button className='create-btn'>New task</button></Link>
+      </div>
       {!tasks.length && <div className="spinner">
         <Loader type="Oval" color="#008cff" />
       </div>}
-
       {tasks.sort(compare).map(task => (
         <TaskItem 
           className="task-container"
@@ -64,9 +58,6 @@ const TasksPage = () => {
           user_id={task.user_id}
         />
       ))}
-      <div className="create-btn-container">
-        <Link to='/task/new'><button className='create-btn'>Create task</button></Link>
-      </div>
     </div>
   )
 }
