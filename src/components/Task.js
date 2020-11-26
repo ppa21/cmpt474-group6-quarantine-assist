@@ -34,6 +34,7 @@ const Task = () => {
         const userInfo = await Auth.currentUserInfo()
         setOwnsTask(response.data.user_id === userInfo.attributes.sub)
         setTask(response.data)
+        setStatus(response.data.status)
         setDescription(response.data.description)
       } catch (err) {
         console.error(err)
@@ -229,7 +230,7 @@ const Task = () => {
 
       {!isNewTask && task.id && ownsTask &&
         <div className='task-actions'>
-          <button onClick={volunteerForTask}>Volunteer</button>
+          {status === 'Open' && <button onClick={volunteerForTask}>Volunteer</button>}
           <button onClick={updateTask}>Update task</button>
           <button onClick={deleteTask}>Delete task</button>
         </div>
