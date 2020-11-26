@@ -30,7 +30,6 @@ const Task = () => {
             headers: { 'Authorization': idToken }
           }
         )
-        console.log("HERE")
         console.log(response.data)
         const userInfo = await Auth.currentUserInfo()
         setOwnsTask(response.data.user_id === userInfo.attributes.sub)
@@ -68,10 +67,6 @@ const Task = () => {
 
   const validationCheck = async event => {
     event.preventDefault();
-
-    // for(var e : event) {
-      
-    // }
 
     if(event === null) {
       alert("can't be null.")
