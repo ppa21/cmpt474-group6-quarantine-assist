@@ -6,4 +6,5 @@
 
 input::placeholder {
     text-indent: 1px;
+    text-align: left !important;
 }
