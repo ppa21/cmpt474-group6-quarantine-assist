@@ -147,7 +147,7 @@ const Task = () => {
 
       invalidateTasksCache(idToken);
 
-      setTask((t) => ({...t, status: 'Help Offered'}))
+      setStatus('Help Offered')
       console.log(response.data)
     } catch (err) {
       console.error(err)
@@ -214,7 +214,7 @@ const Task = () => {
               Posted {parseDate(task.created_at)}
               {task.updated_at > task.created_at && ' (edited)'}
             </div>
-            <h4>Status: {task.status}</h4>
+            <h4>Status: {status}</h4>
             {ownsTask
               ? <textarea
                 className='edit-description'
