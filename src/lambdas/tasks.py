@@ -94,13 +94,14 @@ def lambda_handler(event, context):
                     'id': event['pathParameters']['id']
                 },
                 UpdateExpression='set volunteer_id = :user_sub, #S = :new_status', 
-                # ConditionExpression='#S = :open_status',
+                ConditionExpression='#S = :open_status',
                 ExpressionAttributeNames={
                     '#S': 'status'
                 },
                 ExpressionAttributeValues={
                     ':user_sub': user_sub,
                     ':new_status': body['status'],
+                    ':open_status': 'Open',
                 }
             )
         except Exception as e:
