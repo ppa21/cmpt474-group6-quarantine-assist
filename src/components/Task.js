@@ -33,7 +33,6 @@ const Task = () => {
             headers: { 'Authorization': idToken }
           }
         )
-        console.log(response.data)
         const userInfo = await Auth.currentUserInfo()
         setOwnsTask(response.data.user_id === userInfo.attributes.sub)
         setTask(response.data)
@@ -243,9 +242,7 @@ const Task = () => {
               Volunteer
             </Button>
           }
-        </div>
-      }
-      <Confirm
+          <Confirm
             open={confirm}
             header='Are you sure you want to volunteer? (your email will be shown to the task owner)'
             content="The task owner's email will be displayed. Please contact the task owner at your earliest convenience."
@@ -255,6 +252,8 @@ const Task = () => {
               volunteerForTask();
             }}
           />
+        </div>
+      }
     </div>
   )
 }

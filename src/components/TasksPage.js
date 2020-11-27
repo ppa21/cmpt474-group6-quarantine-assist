@@ -17,7 +17,6 @@ const TasksPage = () => {
   const [filteredList, setFilteredList] = useState(tasks)
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_API_URL)
     async function fetchTasks() {
       try {
         const sessionObject = await Auth.currentSession();
@@ -28,7 +27,6 @@ const TasksPage = () => {
             headers: { 'Authorization': idToken }
           }
         )
-        console.log(response.data)
         setTasks(response.data)
         setFilteredList(response.data)
       } catch (err) {
