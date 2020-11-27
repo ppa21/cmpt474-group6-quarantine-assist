@@ -12,6 +12,15 @@ def lambda_handler(event, context):
     }
     
     if event['httpMethod'] == 'GET':
+      user = event['requestContext']['authorizer']['claims']
+      user_groups = user.get('cognito:groups')
+      if user_groups != 'Admin':
+        return dict(
+            statusCode=401,
+            headers=headers,
+            body='unauthorized user'
+        )
+  
       # get all items
       items = table.scan()
       return dict(
