@@ -230,11 +230,15 @@ const Task = () => {
 
       {!isNewTask && task.id && ownsTask &&
         <div className='task-actions'>
+          <button onClick={updateTask}>Update task</button>
+          <button onClick={deleteTask}>Delete task</button>
+        </div>
+      }
+      {!isNewTask && task.id && !ownsTask &&
+        <div className='task-actions'>
           {status === 'Open' && 
             <button className="volunteer-btn" onClick={volunteerForTask}>Volunteer</button>
           }
-          <button onClick={updateTask}>Update task</button>
-          <button onClick={deleteTask}>Delete task</button>
         </div>
       }
     </div>
