@@ -43,7 +43,7 @@ def lambda_handler(event, context):
             )
     
     elif event['httpMethod'] == 'POST':
-        if not is_user_sub_present:
+        if not is_user_sub_present(event):
             return dict(
                 statusCode=401,
                 headers=headers,
@@ -112,7 +112,7 @@ def lambda_handler(event, context):
             )
     
     elif event['httpMethod'] == 'PUT' and event['pathParameters']:
-        if not is_user_sub_present:
+        if not is_user_sub_present(event):
             return dict(
                 statusCode=401,
                 headers=headers,
@@ -141,7 +141,7 @@ def lambda_handler(event, context):
 
     
     elif event['httpMethod'] == 'DELETE' and event['pathParameters']:
-        if not is_user_sub_present:
+        if not is_user_sub_present(event):
             return dict(
                 statusCode=401,
                 headers=headers,
