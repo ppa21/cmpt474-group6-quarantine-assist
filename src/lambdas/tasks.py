@@ -3,14 +3,12 @@ import datetime
 import json
 import uuid
 
-def get_user_sub(event):
-    if (
+def is_user_sub_present(event):
+    return (
         'authorizer' in event['requestContext'] and
         'claims' in event['requestContext']['authorizer'] and
         'sub' in event['requestContext']['authorizer']['claims']
-    ):
-        return event['requestContext']['authorizer']['claims']['sub']
-    return None
+    )
 
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
@@ -45,8 +43,7 @@ def lambda_handler(event, context):
             )
     
     elif event['httpMethod'] == 'POST':
-        user_sub = get_user_sub(event)
-        if not user_sub:
+        if not is_user_sub_present(event):
             return dict(
                 statusCode=401,
                 headers=headers,
@@ -55,6 +52,7 @@ def lambda_handler(event, context):
 
         try: 
             body = json.loads(event['body'])
+            user_sub = event['requestContext']['authorizer']['claims']['sub']
             item = dict(
                 id=str(uuid.uuid4()),
                 title=body['title'],
@@ -80,8 +78,7 @@ def lambda_handler(event, context):
             )
 
     elif event['httpMethod'] == 'PUT' and event['pathParameters']:
-        user_sub = get_user_sub(event)
-        if not user_sub:
+        if not is_user_sub_present(event):
             return dict(
                 statusCode=401,
                 headers=headers,
@@ -90,6 +87,7 @@ def lambda_handler(event, context):
         
         # only update item if user sub matches task's user id
         body = json.loads(event['body'])
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
         table.update_item(
             Key={
                 'id': event['pathParameters']['id']
@@ -109,8 +107,7 @@ def lambda_handler(event, context):
 
     
     elif event['httpMethod'] == 'DELETE' and event['pathParameters']:
-        user_sub = get_user_sub(event)
-        if not user_sub:
+        if not is_user_sub_present(event):
             return dict(
                 statusCode=401,
                 headers=headers,
@@ -118,6 +115,7 @@ def lambda_handler(event, context):
             )
         
         # only delete item if user sub matches task's user id
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
         table.delete_item(
             Key={
                 'id': event['pathParameters']['id']

@@ -4,6 +4,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
+import { logEvent, LogType } from '../utils'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import "./Task.css"
 
@@ -58,7 +59,7 @@ const Task = () => {
       console.log(response.data)
 
       invalidateTasksCache(idToken);
-
+      logEvent(task, LogType.DELETE_TASK)
       history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
@@ -101,7 +102,7 @@ const Task = () => {
         console.log(response.data)
 
         invalidateTasksCache(idToken);
-  
+        logEvent(response.data, LogType.CREATE_TASK)
         history.push(`/task/${response.data.id}`)
       } catch (err) {
         console.error(err)
@@ -128,7 +129,7 @@ const Task = () => {
       )
 
       invalidateTasksCache(idToken);
-
+      logEvent(task, LogType.UPDATE_TASK)
       console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
