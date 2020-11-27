@@ -24,10 +24,8 @@ def lambda_handler(event, context):
         body = json.loads(event['body'])
         user = event['requestContext']['authorizer']['claims']
         item = dict(
-            timestamp=now,
-            taskId=body['taskId'],
-            taskOwnerId=body['taskOwnerId'],
-            taskTitle=body['taskTitle'],
+            timestampUTC=now,
+            task=body['task'],
             type=body['type'],
             userEmail=user['email'],
             userId=user['sub'],

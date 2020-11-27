@@ -5,6 +5,12 @@
     max-width: 800px;
 }
 
+h1 {
+    font-size: 35px !important;
+    text-align: center;
+    margin: 20px auto !important;
+}  
+
 .info-boxes {
     display: flex;
     flex-flow: row wrap;

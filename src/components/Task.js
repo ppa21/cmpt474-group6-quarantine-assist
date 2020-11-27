@@ -4,7 +4,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 import { useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
-import { logEvent, LogType } from '../utils'
+import { parseDate, logEvent, LogType } from '../utils'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import "./Task.css"
 
@@ -137,11 +137,6 @@ const Task = () => {
     }
   } 
 
-  const parseDate = isoDate => {
-    const date = new Date(isoDate)
-    return date.toString().split(' ').slice(0, 5).join(' ')
-  }
-
   const invalidateTasksCache = idToken => {
     // Call the Tasks endpoint with Cache-control: max-age=0 to invalidate the tasks cache
     axios.get(
@@ -193,7 +188,7 @@ const Task = () => {
           <div>
             <div className="task-title">{task.title}</div>
             <div className='task-created-at'>
-              Posted {parseDate(task.created_at)}
+              Posted {parseDate(task.created_at)} PST
               {task.updated_at > task.created_at && ' (edited)'}
             </div>
             <h4>Status: {task.status}</h4>

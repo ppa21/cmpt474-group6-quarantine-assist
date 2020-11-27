@@ -21,9 +21,7 @@ export const logEvent = async (task, type) => {
     const response = await axios.post(
       `${process.env.REACT_APP_API_URL}/log/`,
       {
-        taskId: task.id,
-        taskOwnerId: task.user_id,
-        taskTitle: task.title,
+        task,
         type
       },
       {
