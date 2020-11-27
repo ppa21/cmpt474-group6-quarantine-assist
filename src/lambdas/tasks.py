@@ -77,6 +77,40 @@ def lambda_handler(event, context):
                 body='`title` and `description` are required'
             )
 
+    elif event['httpMethod'] == 'PUT' and event['resource'] == "/task/{id}/volunteer":
+        if not is_user_sub_present:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body='unauthorized user'
+            )
+
+        user_sub = event['requestContext']['authorizer']['claims']['sub']
+        
+        try:
+            body = json.loads(event['body'])
+            table.update_item(
+                Key={
+                    'id': event['pathParameters']['id']
+                },
+                UpdateExpression='set volunteer_id = :user_sub, #S = :new_status', 
+                ConditionExpression='#S = :open_status',
+                ExpressionAttributeNames={
+                    '#S': 'status'
+                },
+                ExpressionAttributeValues={
+                    ':user_sub': user_sub,
+                    ':new_status': body['status'],
+                    ':open_status': 'Open',
+                }
+            )
+        except Exception as e:
+            return dict(
+                statusCode=401,
+                headers=headers,
+                body="Invalid status"
+            )
+    
     elif event['httpMethod'] == 'PUT' and event['pathParameters']:
         if not is_user_sub_present:
             return dict(
