@@ -122,7 +122,7 @@ def lambda_handler(event, context):
         # only update item if user sub matches task's user id
         body = json.loads(event['body'])
         user_sub = event['requestContext']['authorizer']['claims']['sub']
-        table.update_item(
+        item = table.update_item(
             Key={
                 'id': event['pathParameters']['id']
             },
@@ -132,11 +132,13 @@ def lambda_handler(event, context):
                 ':description': body['description'],
                 ':now': now,
                 ':user_sub': user_sub
-            }
+            },
+            ReturnValues='ALL_NEW'
         )
         return dict(
             statusCode=200,
-            headers=headers
+            headers=headers,
+            body=json.dumps(item['Attributes'])
         )
 
     
@@ -160,7 +162,7 @@ def lambda_handler(event, context):
             }
         )
         return dict(
-            statusCode=200,
+            statusCode=204,
             headers=headers
         )
     

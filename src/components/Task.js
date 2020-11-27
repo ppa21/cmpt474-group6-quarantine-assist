@@ -127,7 +127,7 @@ const Task = () => {
       )
 
       invalidateTasksCache(idToken);
-      logEvent(task, LogType.UPDATE_TASK)
+      logEvent(response.data, LogType.UPDATE_TASK)
       console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
