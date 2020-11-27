@@ -4,10 +4,7 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.27",
-<<<<<<< HEAD
     "@material-ui/core": "^4.11.1",
-=======
->>>>>>> 69ac04678061dfad3697b74ad8b80ba21e91c986
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -20,11 +17,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "react-toastify": "^6.1.0",
-<<<<<<< HEAD
-=======
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.1",
->>>>>>> 69ac04678061dfad3697b74ad8b80ba21e91c986
     "web-vitals": "^0.2.4"
   },
   "scripts": {

@@ -8,7 +8,6 @@ import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import 'semantic-ui-css/semantic.min.css'
 import "./Task.css"
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -160,7 +159,6 @@ const Task = () => {
     }
   }
 
-
   const parseDate = isoDate => {
     const date = new Date(isoDate)
     return date.toString().split(' ').slice(0, 5).join(' ')
@@ -177,7 +175,6 @@ const Task = () => {
   }
 
   const changeStatus = async e => {
-    e.preventDefault()
     try {
       const sessionObject = await Auth.currentSession();
       const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
@@ -192,7 +189,7 @@ const Task = () => {
       )
 
       invalidateTasksCache(idToken);
-
+      
       console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
@@ -262,28 +259,21 @@ const Task = () => {
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
-          >
-            {/* <MenuItem onClick={handleClose}>Open</MenuItem>
-            <MenuItem onClick={handleClose}>Close</MenuItem>
-            <MenuItem onClick={handleClose}>Help Offered</MenuItem> */}
-     
+          >  
             <MenuItem onClick= {e => {
               setStatus("Open");
-              //updateTask();
               handleClose();
             }}
             >Open</MenuItem>
 
             <MenuItem onClick= {e => {
-              setStatus("Close");
-              //changeStatus();
+              setStatus("Closed");
               handleClose();
             }}
-            >Close</MenuItem>
+            >Closed</MenuItem>
 
             <MenuItem onClick= {e => {
               setStatus("Help Offered");
-              //changeStatus();
               handleClose();
             }}
             >Help Offered</MenuItem>
