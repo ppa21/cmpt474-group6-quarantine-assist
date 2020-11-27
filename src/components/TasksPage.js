@@ -1,3 +1,7 @@
+/*
+  Reference for search bar = https://dev.to/iam_timsmith/lets-build-a-search-bar-in-react-120j
+*/
+
 import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify'
 import { Link } from 'react-router-dom'
@@ -8,8 +12,9 @@ import { withAuthenticator } from 'aws-amplify-react';
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import './TasksPage.css'
+import "./SearchBar.css"
 import { parseDate } from '../utils'
-import SearchBar from "./SearchBar"
+// import SearchBar from "./SearchBar"
 
 Amplify.configure(awsmobile);
 const TasksPage = () => {
@@ -47,7 +52,6 @@ const TasksPage = () => {
       currentTaskList = tasks; 
 
       newTaskList = currentTaskList.filter(task => {
-        // console.log(task.title)
         const title = task.title.toLowerCase();
         const userInput = e.target.value.toLowerCase(); 
         return title.includes(userInput);
@@ -56,9 +60,7 @@ const TasksPage = () => {
         newTaskList = tasks; 
     } 
 
-    setTasks(newTaskList)
-    // console.log("tasks", tasks)
-    // console.log("backup", filteredList)
+    setTasks(newTaskList) 
 
     if(e.target.value.trim() === "") {
       setTasks(filteredList)
@@ -70,10 +72,13 @@ const TasksPage = () => {
       <h1 className="custom-h1">Latest tasks</h1>
 
       <div className="grid-container">
-        <div className="grid-item">
-          <SearchBar placeholder="Search for a task..." handleChange={e => handleChange(e)} />
-          {/* <SearchBar placeholder="search" handleChange={e => resultingTasks(e)} />  */}
+        <div className="ui search grid-item">
+          <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} /> 
+          <div className="results"></div>
         </div>
+        {/* <div className="grid-item">
+          <SearchBar placeholder="Search for a task..." handleChange={e => handleChange(e)} /> 
+        </div> */}
         <div className="grid-item create-btn-container">
           <Link to='/task/new'><button className='grid-item create-btn'>New task</button></Link>
         </div>
