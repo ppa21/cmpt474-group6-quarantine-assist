@@ -86,7 +86,6 @@ def lambda_handler(event, context):
             )
 
         user_sub = event['requestContext']['authorizer']['claims']['sub']
-        help_offered = 'Help Offered'
         
         try:
             body = json.loads(event['body'])
@@ -94,13 +93,12 @@ def lambda_handler(event, context):
                 Key={
                     'id': event['pathParameters']['id']
                 },
-                UpdateExpression='set volunteer_id = :user_sub, updated_at = :now, #S = :new_status', 
+                UpdateExpression='set volunteer_id = :user_sub, #S = :new_status', 
                 # ConditionExpression='#S = :open_status',
                 ExpressionAttributeNames={
                     '#S': 'status'
                 },
                 ExpressionAttributeValues={
-                    ':now': now,
                     ':user_sub': user_sub,
                     ':new_status': body['status'],
                 }
