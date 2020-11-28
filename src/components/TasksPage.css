@@ -4,7 +4,6 @@
     border: 2px solid rgb(105, 105, 105);
     padding: 15px 20px 15px 20px;
     margin: 15px 0 5px 0;
-    cursor: pointer;
     text-decoration: none;
 }
 
@@ -23,13 +22,13 @@
 }
 
 .task-created-at {
-    color: #5b7ecf;
-    font-size: 12.5px;
+    color: #3b5aa5;
+    font-size: 0.875em;
     margin: 5px 0 10px 0;
 }
 
 .task-desc {
-    color: #5b7ecf;
+    color: #3b5aa5;
 }
 
 .create-btn-container{

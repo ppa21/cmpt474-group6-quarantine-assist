@@ -20,7 +20,7 @@ const Logs = () => {
             headers: { 'Authorization': idToken }
           }
         )
-        console.log(response.data)
+        //console.log(response.data)
         setLogs(response.data.map(log => ({ ...log, isExpanded: false })))
         setIsMounted(true)
       } catch (err) {
@@ -39,6 +39,8 @@ const Logs = () => {
         return 'updated'
       case LogType.DELETE_TASK:
         return 'deleted'
+      case LogType.VOLUNTEER_TASK:
+        return 'volunteered for'
       default:
         return ''
     }

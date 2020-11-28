@@ -46,6 +46,29 @@
     margin-right: 10px;
 }
 
-.volunteer-btn{
+.task-by {
+    color: #3b5aa5;
+    font-size: 0.875em;
+    margin: 5px 0 10px 0;
+}
+
+.task-by-created-at {
+    display: inline;
+    margin-left: 5px;
+}
+
+.task-attr-label {    
+    margin: 5px 0;
+}
+.task-attr-label span {
+    font-weight: 600;
+}
+.volunteer-btn {
     background-color: rgb(0, 161, 0);
+}
+
+.task-current-volunteer {
+    color: #3b5aa5;
+    font-size: 1.25em;
+    margin: 15px 0 0 15px;
 }
