@@ -71,7 +71,7 @@ const Task = () => {
   const validationCheck = async event => {
     event.preventDefault();
 
-    if(event === null) {
+    if (event === null) {
       alert("can't be null.")
       return false
     } else {
@@ -81,7 +81,7 @@ const Task = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if(title.trim() !== "") {
+    if (title.trim() !== "") {
       try {
         const sessionObject = await Auth.currentSession();
         const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
@@ -140,7 +140,7 @@ const Task = () => {
       const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/task/${task.id}/volunteer`,
-        {status : 'Help Offered'},
+        { status: 'Help Offered' },
         {
           headers: { 'Authorization': idToken }
         }
@@ -218,7 +218,7 @@ const Task = () => {
                 {task.updated_at > task.created_at && ' (edited)'}
               </div>
             </div>
-            <div className="task-attr-label"><span>Status:</span> {task.status}</div>
+            <div className="task-attr-label"><span>Status:</span> {status}</div>
             <div className="task-attr-label"><span>Description:</span></div>
             {ownsTask
               ? <textarea
@@ -247,7 +247,7 @@ const Task = () => {
       }
       {!isNewTask && task.id && !ownsTask &&
         <div className='task-actions'>
-          {status === 'Open' && 
+          {status === 'Open' &&
             <Button primary className="volunteer-btn" onClick={() => setConfirm(true)}>
               Volunteer
             </Button>
