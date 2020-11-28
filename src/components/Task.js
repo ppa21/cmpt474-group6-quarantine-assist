@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react';
 import { useHistory, useLocation } from 'react-router-dom'
+import { Button, Confirm } from 'semantic-ui-react'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import 'semantic-ui-css/semantic.min.css'
 import "./Task.css"
 
 const Task = () => {
@@ -13,6 +15,7 @@ const Task = () => {
   const [task, setTask] = useState({})
   const [ownsTask, setOwnsTask] = useState(false)
   const [status, setStatus] = useState('')
+  const [confirm, setConfirm] = useState(false)
 
   const history = useHistory()
   const location = useLocation()
@@ -30,10 +33,10 @@ const Task = () => {
             headers: { 'Authorization': idToken }
           }
         )
-        console.log(response.data)
         const userInfo = await Auth.currentUserInfo()
         setOwnsTask(response.data.user_id === userInfo.attributes.sub)
         setTask(response.data)
+        setStatus(response.data.status)
         setDescription(response.data.description)
       } catch (err) {
         console.error(err)
@@ -68,11 +71,7 @@ const Task = () => {
   const validationCheck = async event => {
     event.preventDefault();
 
-    // for(var e : event) {
-
-    // }
-
-    if (event === null) {
+    if(event === null) {
       alert("can't be null.")
       return false
     } else {
@@ -82,8 +81,7 @@ const Task = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-
-    if (title.trim() !== "") {
+    if(title.trim() !== "") {
       try {
         const sessionObject = await Auth.currentSession();
         const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
@@ -135,6 +133,28 @@ const Task = () => {
       console.error(err)
     }
   }
+
+  const volunteerForTask = async e => {
+    try {
+      const sessionObject = await Auth.currentSession();
+      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/task/${task.id}/volunteer`,
+        {status : 'Help Offered'},
+        {
+          headers: { 'Authorization': idToken }
+        }
+      )
+
+      invalidateTasksCache(idToken);
+
+      setStatus('Help Offered')
+      console.log(response.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
 
   const parseDate = isoDate => {
     const date = new Date(isoDate)
@@ -223,6 +243,25 @@ const Task = () => {
         <div className='task-actions'>
           <button onClick={updateTask}>Update task</button>
           <button onClick={deleteTask}>Delete task</button>
+        </div>
+      }
+      {!isNewTask && task.id && !ownsTask &&
+        <div className='task-actions'>
+          {status === 'Open' && 
+            <Button primary className="volunteer-btn" onClick={() => setConfirm(true)}>
+              Volunteer
+            </Button>
+          }
+          <Confirm
+            open={confirm}
+            header='Are you sure you want to volunteer? (your email will be shown to the task owner)'
+            content="The task owner's email will be displayed. Please contact the task owner at your earliest convenience."
+            onCancel={() => setConfirm(false)}
+            onConfirm={() => {
+              setConfirm(false);
+              volunteerForTask();
+            }}
+          />
         </div>
       }
     </div>
