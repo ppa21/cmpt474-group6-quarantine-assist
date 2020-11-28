@@ -8,6 +8,8 @@ import Loader from 'react-loader-spinner'
 import { parseDate, logEvent, LogType } from '../utils'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import "./Task.css"
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const TaskStatus = {
   Open: 'Open',
@@ -28,6 +30,8 @@ const Task = () => {
   const history = useHistory()
   const location = useLocation()
   const isNewTask = location.pathname.split('/')[2] === 'new'
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   useEffect(() => {
     async function fetchTask() {
@@ -134,7 +138,8 @@ const Task = () => {
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/task/${task.id}`,
         {
-          description
+          description,
+          status
         },
         {
           headers: { 'Authorization': idToken }
@@ -170,6 +175,11 @@ const Task = () => {
     }
   }
 
+  const parseDate = isoDate => {
+    const date = new Date(isoDate)
+    return date.toString().split(' ').slice(0, 5).join(' ')
+  }
+
   const invalidateTasksCache = idToken => {
     // Call the Tasks endpoint with Cache-control: max-age=0 to invalidate the tasks cache
     axios.get(
@@ -180,119 +190,159 @@ const Task = () => {
     )
   }
 
-  return (
-    <div className="container">
-      {!isNewTask && isLoading && <div className="spinner">
-        <Loader type="Oval" color="#008cff" />
-      </div>
-      }
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-      {isNewTask &&
-        <div className="task-container">
-          <form onSubmit={handleSubmit}>
-            <h4>New Task</h4>
-            <div className="title">
-              <div className="label-container">
-                <label>Title</label>
-              </div>
-              <input className="title-input"
-                type='text' required value={title} onChange={e => setTitle(e.target.value)} />
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+return (
+  <div className="container">
+    {!isNewTask && isLoading && <div className="spinner">
+      <Loader type="Oval" color="#008cff" />
+    </div>
+    }
+
+    {isNewTask &&
+      <div className="task-container">
+        <form onSubmit={handleSubmit}>
+          <h4>New Task</h4>
+          <div className="title">
+            <div className="label-container">
+              <label>Title</label>
             </div>
-            <div className="description">
-              <div className="label-container">
-                <label>Description</label>
+            <input className="title-input"
+              type='text' required value={title} onChange={e => setTitle(e.target.value)} />
+          </div>
+          <div className="description">
+            <div className="label-container">
+              <label>Description</label>
+            </div>
+            <textarea
+              className="desc-input"
+              type='text'
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+            />
+          </div>
+          <div className="create-container">
+            <input type="submit" value='Create' onClick={e => setStatus(TaskStatus.Open)} />
+          </div>
+        </form>
+      </div>
+    }
+
+    {!isNewTask && task.id && !isLoading &&
+      <>
+        {isTaskVolunteer && <div className="task-current-volunteer">You have volunteered for this task</div>}
+        <div className="task-container">
+          <div>
+            <div className="task-title">{task.title}</div>
+            <div className='task-by'>
+              Posted by <b>{task.user.nickname || task.user.given_name || task.user.username}</b>
+              <div className='task-by-created-at'>
+                - Posted {parseDate(task.created_at)} PST
+              {task.updated_at > task.created_at && ' (edited)'}
               </div>
-              <textarea
-                className="desc-input"
+            </div>
+            <div className="task-attr-label"><span>Status:</span> {status}</div>
+
+            {ownsTask
+              ? <div> 
+                <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}> Set Status </Button>
+              <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >  
+            <MenuItem onClick= {e => {
+              setStatus(TaskStatus.Open);
+              handleClose();
+            }}
+            >Open</MenuItem>
+
+            <MenuItem onClick= {e => {
+              setStatus(TaskStatus.Done);
+              handleClose();
+            }}
+            >Done</MenuItem>
+
+            <MenuItem onClick= {e => {
+              setStatus(TaskStatus.HelpOffered);
+              handleClose();
+            }}
+            >Help Offered</MenuItem>
+          </Menu>
+              </div>
+            : <div className="status-dropdown"></div>
+            }
+
+            <div className="task-attr-label"><span>Description:</span></div>
+            {ownsTask
+              ? <textarea
+                className='edit-description'
                 type='text'
                 value={description}
                 onChange={e => setDescription(e.target.value)}
               />
-            </div>
-            <div className="create-container">
-              <input type="submit" value='Create' onClick={e => setStatus(TaskStatus.Open)} />
-            </div>
-          </form>
-        </div>
-      }
-
-      {!isNewTask && task.id && !isLoading &&
-        <>
-          {isTaskVolunteer && <div className="task-current-volunteer">You have volunteered for this task</div>}
-          <div className="task-container">
-            <div>
-              <div className="task-title">{task.title}</div>
-              <div className='task-by'>
-                Posted by <b>{task.user.nickname || task.user.given_name || task.user.username}</b>
-                <div className='task-by-created-at'>
-                  - Posted {parseDate(task.created_at)} PST
-                {task.updated_at > task.created_at && ' (edited)'}
-                </div>
-              </div>
-              <div className="task-attr-label"><span>Status:</span> {status}</div>
-              <div className="task-attr-label"><span>Description:</span></div>
-              {ownsTask
-                ? <textarea
-                  className='edit-description'
-                  type='text'
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                />
-                : <div className="task-desc">{task.description}</div>
-              }
-              {task.user.email &&
-                <div className="task-attr-label"><span>Owner Email:</span> <a href={"mailto:" + task.user.email}>{task.user.email}</a></div>
-              }
-              {task.user.volunteer_email &&
-                <div className="task-attr-label"><span>Volunteer Email:</span> <a href={"mailto:" + task.user.volunteer_email}>{task.user.volunteer_email}</a></div>
-              }
-            </div>
+              : <div className="task-desc">{task.description}</div>
+            }
+            {task.user.email &&
+              <div className="task-attr-label"><span>Owner Email:</span> <a href={"mailto:" + task.user.email}>{task.user.email}</a></div>
+            }
+            {task.user.volunteer_email &&
+              <div className="task-attr-label"><span>Volunteer Email:</span> <a href={"mailto:" + task.user.volunteer_email}>{task.user.volunteer_email}</a></div>
+            }
           </div>
-        </>
-      }
-
-      {!isNewTask && task.id && ownsTask &&
-        <div className='task-actions'>
-          <button onClick={updateTask}>Update task</button>
-          <button onClick={deleteTask}>Delete task</button>
         </div>
-      }
-      {!isNewTask && task.id && !ownsTask &&
-        <div className='task-actions'>
-          {status === TaskStatus.Open &&
-            <Button primary className="volunteer-btn" onClick={() => setConfirm(true)}>
-              Volunteer
+      </>
+    }
+
+    {!isNewTask && task.id && ownsTask &&
+      <div className='task-actions'>
+        <button onClick={updateTask}>Update task</button>
+        <button onClick={deleteTask}>Delete task</button>
+      </div>
+    }
+    {!isNewTask && task.id && !ownsTask &&
+      <div className='task-actions'>
+        {status === TaskStatus.Open &&
+          <Button primary className="volunteer-btn" onClick={() => setConfirm(true)}>
+            Volunteer
+          </Button>
+        }
+
+        <Modal open={confirm} >
+          <Header>
+            Are you sure you want to volunteer? <br />
+            Your email will be shown to the task owner
+          </Header>
+          <Modal.Content>
+            <p>
+              Once you have volunteered, the owner's email will be displayed. <br />
+              Please get in touch with the task owner at your earliest convenience to get more information about them and their task. <br /><br />
+              Thank you for volunteering.
+            </p>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color='red' inverted onClick={() => setConfirm(false)}>
+              Cancel
             </Button>
-          }
-
-          <Modal open={confirm} >
-            <Header>
-              Are you sure you want to volunteer? <br />
-              Your email will be shown to the task owner
-            </Header>
-            <Modal.Content>
-              <p>
-                Once you have volunteered, the owner's email will be displayed. <br />
-                Please get in touch with the task owner at your earliest convenience to get more information about them and their task. <br /><br />
-                Thank you for volunteering.
-              </p>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button color='red' inverted onClick={() => setConfirm(false)}>
-                Cancel
-              </Button>
-              <Button color='green' inverted onClick={() => {
-                setConfirm(false);
-                volunteerForTask();
-              }}>
-                Ok
-              </Button>
-            </Modal.Actions>
-          </Modal>
-        </div>
-      }
-    </div>
-  )
+            <Button color='green' inverted onClick={() => {
+              setConfirm(false);
+              volunteerForTask();
+            }}>
+              Ok
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      </div>
+    }
+  </div>
+)
 }
-
 export default withAuthenticator(Task, false);
