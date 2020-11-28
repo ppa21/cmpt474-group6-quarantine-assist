@@ -25,6 +25,7 @@ const Profile = () => {
       return {...map, [key] : ''};
     }, {})
   )
+
   const [newAttributes, setNewAttributes] = useState(
     Object.keys(attrKeys).reduce((map, key) => {
       return {...map, [key] : ''}
@@ -38,7 +39,7 @@ const Profile = () => {
       const c_user = await Auth.currentAuthenticatedUser()
       setUser(c_user)
       setAttributes(a => ({...a, ...c_user.attributes}))
-      setNewAttributes({...newAttributes,...c_user.attributes})
+      setNewAttributes({...newAttributes, ...c_user.attributes})
     }
 
     fetchUserAttributes()
