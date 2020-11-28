@@ -57,6 +57,7 @@ const Task = () => {
       setStatus(response.data.status)
       setDescription(response.data.description)
       setIsLoading(false);
+      return response.data;
     } catch (err) {
       console.error(err)
     }
@@ -161,13 +162,9 @@ const Task = () => {
         }
       )
 
-      loadTask(idToken, task.id)
+      const updatedTask = await loadTask(idToken, task.id)
       invalidateTasksCache(idToken);
-      logEvent(task, LogType.VOLUNTEER_TASK)
-
-      // This is to refresh the page so it show emails and the lastest info
-      // history.replace('/', null);
-      // history.replace(`/task/${task.id}`, null);
+      logEvent(updatedTask, LogType.VOLUNTEER_TASK)
     } catch (err) {
       console.error(err)
     }
