@@ -11,7 +11,8 @@ export const parseDate = isoDate => {
 export const LogType = {
   CREATE_TASK: 'createTask',
   UPDATE_TASK: 'updateTask',
-  DELETE_TASK: 'deleteTask'
+  DELETE_TASK: 'deleteTask',
+  VOLUNTEER_TASK: 'volunteerTask'
 }
 
 export const logEvent = async (task, type) => {
@@ -28,7 +29,7 @@ export const logEvent = async (task, type) => {
         headers: { 'Authorization': idToken }
       }
     )
-    console.log(response.data)
+    //console.log(response.data)
   } catch (err) {
     console.error(err)
   }
