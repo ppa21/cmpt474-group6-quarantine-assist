@@ -1,9 +1,23 @@
 .container{
     display:flex;
     flex-direction: column;
-    margin: 0 auto;
+    margin: 20px auto 0 auto;
     max-width: 800px;
 }
+
+.container input[type=email], 
+.container input[type=password], 
+.container input[type=search], 
+.container input[type=text] {
+    -webkit-appearance: auto;
+    -moz-appearance: none;
+}
+
+h1 {
+    font-size: 35px !important;
+    text-align: center;
+    margin: 20px auto !important;
+}  
 
 .info-boxes {
     display: flex;
@@ -26,4 +40,13 @@
     margin: 5px;
     width: calc( (100% / 2) - 40px );
     padding: 10px;
+}
+
+.amplify-button {
+    min-width: 153px;
+    color: white;
+    padding: 1rem;
+    background-color: var(--button-background-color);
+    font-weight: 600;
+    font-size: var(--amplify-text-sm);
 }
