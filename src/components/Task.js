@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { Button, Modal, Header } from 'semantic-ui-react'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
+import { parseDate, logEvent, LogType } from '../utils'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import 'semantic-ui-css/semantic.min.css'
 import "./Task.css"
@@ -63,7 +64,7 @@ const Task = () => {
       console.log(response.data)
 
       invalidateTasksCache(idToken);
-
+      logEvent(task, LogType.DELETE_TASK)
       history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
@@ -101,7 +102,7 @@ const Task = () => {
         console.log(response.data)
 
         invalidateTasksCache(idToken);
-
+        logEvent(response.data, LogType.CREATE_TASK)
         history.push(`/task/${response.data.id}`)
       } catch (err) {
         console.error(err)
@@ -128,7 +129,7 @@ const Task = () => {
       )
 
       invalidateTasksCache(idToken);
-
+      logEvent(response.data, LogType.UPDATE_TASK)
       console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
@@ -155,12 +156,6 @@ const Task = () => {
     } catch (err) {
       console.error(err)
     }
-  }
-
-
-  const parseDate = isoDate => {
-    const date = new Date(isoDate)
-    return date.toString().split(' ').slice(0, 5).join(' ')
   }
 
   const invalidateTasksCache = idToken => {
@@ -218,7 +213,7 @@ const Task = () => {
             <div className='task-by'>
               Posted by <b>{task.user.nickname || task.user.given_name || task.user.username}</b>
               <div className='task-by-created-at'>
-                - Posted {parseDate(task.created_at)}
+                - Posted {parseDate(task.created_at)} PST
                 {task.updated_at > task.created_at && ' (edited)'}
               </div>
             </div>
