@@ -22,6 +22,8 @@ const TasksPage = () => {
   const [filteredList, setFilteredList] = useState(tasks)
 
   useEffect(() => {
+    let isSubscribed = true;
+
     async function fetchTasks() {
       try {
         const sessionObject = await Auth.currentSession();
@@ -32,6 +34,9 @@ const TasksPage = () => {
             headers: { 'Authorization': idToken }
           }
         )
+
+        if(!isSubscribed) return
+
         setTasks(response.data)
         setFilteredList(response.data)
       } catch (err) {
@@ -40,6 +45,8 @@ const TasksPage = () => {
     }
 
     fetchTasks()
+
+    return () => (isSubscribed = false)
   }, []) 
 
   const handleChange = async e => {
