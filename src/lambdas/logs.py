@@ -7,8 +7,7 @@ def lambda_handler(event, context):
     table = dynamodb.Table('Logs')
     now = datetime.datetime.utcnow().isoformat()
     headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Cache-control'
+        'Access-Control-Allow-Origin': '*'
     }
     
     if event['httpMethod'] == 'GET':
