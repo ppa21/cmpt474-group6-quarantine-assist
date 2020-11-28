@@ -138,7 +138,8 @@ const Task = () => {
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/task/${task.id}`,
         {
-          description
+          description,
+          status
         },
         {
           headers: { 'Authorization': idToken }
@@ -188,29 +189,6 @@ const Task = () => {
       }
     )
   }
-
-  const changeStatus = async e => {
-    try {
-      const sessionObject = await Auth.currentSession();
-      const idToken = sessionObject ? sessionObject.idToken.jwtToken : null;
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/task/${task.id}/status`,
-        {
-          status
-        },
-        {
-          headers: { 'Authorization': idToken }
-        }
-      )
-
-      invalidateTasksCache(idToken);
-      
-      console.log(response.data)
-      history.push(`/tasks/all`)
-    } catch (err) {
-      console.error(err)
-    }
-  } 
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -328,7 +306,6 @@ return (
       <div className='task-actions'>
         <button onClick={updateTask}>Update task</button>
         <button onClick={deleteTask}>Delete task</button>
-        <button onClick={changeStatus}>Update status</button>
       </div>
     }
     {!isNewTask && task.id && !ownsTask &&
