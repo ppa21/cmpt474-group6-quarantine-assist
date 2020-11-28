@@ -1,5 +1,8 @@
 /*
-  Reference for search bar = https://dev.to/iam_timsmith/lets-build-a-search-bar-in-react-120j
+  References:
+            https://github.com/aws-amplify/amplify-js/issues/6578 
+            https://stackoverflow.com/questions/38884522/why-is-my-asynchronous-function-returning-promise-pending-instead-of-a-val
+            https://stackoverflow.com/questions/37997893/promise-error-objects-are-not-valid-as-a-react-child 
 */
 
 import React, { useEffect, useState } from 'react';
@@ -17,9 +20,10 @@ import { parseDate } from '../utils'
 // import SearchBar from "./SearchBar"
 
 Amplify.configure(awsmobile);
-const TasksPage = () => {
+const MyTasks = () => {
   const [tasks, setTasks] = useState([])
   const [filteredList, setFilteredList] = useState(tasks)
+  const [renderTasks, setRenderTasks] = useState([]);
   const [check, setCheck] = useState(false);
 
   useEffect(() => {
@@ -67,9 +71,16 @@ const TasksPage = () => {
     }
   } 
 
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then(user => {
+      let myTasks = tasks.filter(task => task.user_id === user.attributes.sub);
+      setRenderTasks(myTasks);
+    })
+  }, [tasks])
+
   return (
     <div className="container tasks">
-      <h1 className="custom-h1">Latest tasks</h1>
+      <h1 className="custom-h1">My Tasks</h1>
 
       <div className="grid-container">
         <div className="ui search grid-item">
@@ -79,17 +90,18 @@ const TasksPage = () => {
         {/* <div className="grid-item">
           <SearchBar placeholder="Search for a task..." handleChange={e => handleChange(e)} /> 
         </div> */}
-        <div className="grid-item create-btn-container">
+        {/* <div className="grid-item create-btn-container">
           <Link to='/task/new'><button className='grid-item create-btn'>New task</button></Link>
-        </div>
-      </div>
+        </div> */}
+      </div> 
 
       {!check && <div className="spinner">
         <Loader type="Oval" color="#008cff" />
       </div>}
-      {check && !tasks.length && <h5>No task to show.</h5>}
+      {check && !renderTasks.length && <h5>You have not created any task.</h5>}
+      {/* <h3>Learn about Self-Isolation &amp; Self-Assessment tools</h3> */}
 
-      {tasks
+      {renderTasks
         .sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)  // sort by (descending) created_at
         .map(task => (
         <Link
@@ -109,4 +121,4 @@ const TasksPage = () => {
   )
 }
 
-export default withAuthenticator(TasksPage, false);
+export default withAuthenticator(MyTasks, false);
