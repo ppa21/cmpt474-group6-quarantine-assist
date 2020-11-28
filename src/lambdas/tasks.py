@@ -39,20 +39,27 @@ def lambda_handler(event, context):
             user_pool_id = event['requestContext']['authorizer']['claims']['iss'].split('/')[-1]
             current_user_sub = event['requestContext']['authorizer']['claims']['sub']
             task_user_sub = item['Item']['user_id']
-            response = cognito.list_users(
+            owner_response = cognito.list_users(
                 UserPoolId=user_pool_id,
                 Filter='sub = "' + task_user_sub + '"',
             )
 
-            #TODO also get the volunteer user by volunteer_id if one exists
+            volunteer_user = None
+            volunteer_sub = tem['Item'].get('volunteer_id')
+            if volunteer_sub:
+                volunteer_response = cognito.list_users(
+                    UserPoolId=user_pool_id,
+                    Filter='sub = "' + volunteer_sub + '"',
+                )
+                volunteer_user = volunteer_response['Users'][0]
  
-            task_user = response['Users'][0]
+            task_user = owner_response['Users'][0]
             user = {
                 'username': task_user['Username']
             }
-            if task_user_sub == current_user_sub: #TODO add OR if the current_use_sub is the same as volunteer_id if one exists
+            if task_user_sub == current_user_sub OR volunteer_sub == current_user_sub: #TODO add OR if the current_use_sub is the same as volunteer_id if one exists
                 user['email'] = [a for a in task_user['Attributes'] if a['Name'] == 'email'][0]['Value']
-                #TODO add user[volunteer_email] if a volunteer exists
+                user['volunteer_email'] = [a for a in volunteer_user['Attributes'] if a['Name'] == 'email'][0]['Value']
 
             for attribute in task_user['Attributes']:
                 if attribute['Name'] in ('nickname', 'given_name', 'family_name'):

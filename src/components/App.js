@@ -13,17 +13,21 @@ import '@aws-amplify/ui/dist/style.css';
 // Amplify.configure(awsmobile);
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false)
+    const [username, setUsername] = useState('')
 
     useEffect(() => {
         const currentUser = () => {
             Auth.currentAuthenticatedUser()
                 .then(user => {
                     // setText("logged in") 
+                    console.log(user)
                     setLoggedIn(true)
+                    setUsername(user.username)
                 })
                 .catch(err => {
                     // setText("not logged in") 
                     setLoggedIn(false)
+                    setUsername('')
                 });
         };
 
@@ -40,7 +44,7 @@ const App = () => {
                     <Navigation>
                         <Link to="/">Home</Link>
                         <Link to="/tasks/all">Tasks</Link>
-                        <Link to="/profile">Profile</Link>
+                        {loggedIn ? <Link to="/profile">Profile ({username})</Link> : ""}
                         {!loggedIn ? <Link to="/login">Login</Link> : ""}
                         {loggedIn ? <AmplifySignOut /> : ""}
                         {/* {loggedIn && <AmplifySignOut />} */}
@@ -51,7 +55,7 @@ const App = () => {
                     <Navigation>
                         <Link to="/">Home</Link>
                         <Link to="/tasks/all">Tasks</Link>
-                        <Link to="/profile">Profile</Link>
+                        {loggedIn ? <Link to="/profile">Profile ({username})</Link> : ""}
                         {!loggedIn ? <Link to="/login">Login</Link> : ""}
                         {loggedIn ? <AmplifySignOut /> : ""}
                     </Navigation>

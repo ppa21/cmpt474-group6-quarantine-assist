@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react';
 import { useHistory, useLocation } from 'react-router-dom'
-import { Button, Confirm } from 'semantic-ui-react'
+import { Button, Modal, Header } from 'semantic-ui-react'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
@@ -14,6 +14,7 @@ const Task = () => {
   const [description, setDescription] = useState('')
   const [task, setTask] = useState({})
   const [ownsTask, setOwnsTask] = useState(false)
+  const [isTaskVolunteer, setIsTaskVolunteer] = useState(false)
   const [status, setStatus] = useState('')
   const [confirm, setConfirm] = useState(false)
 
@@ -35,6 +36,7 @@ const Task = () => {
         )
         const userInfo = await Auth.currentUserInfo()
         setOwnsTask(response.data.user_id === userInfo.attributes.sub)
+        setIsTaskVolunteer(response.data.volunteer_id && response.data.volunteer_id === userInfo.attributes.sub)
         setTask(response.data)
         setStatus(response.data.status)
         setDescription(response.data.description)
@@ -208,8 +210,10 @@ const Task = () => {
       }
 
       {!isNewTask && task.id &&
+      <>
+        {isTaskVolunteer && <div className="task-current-volunteer">You have volunteered for this task</div>}
         <div className="task-container">
-          <div>
+          <div>          
             <div className="task-title">{task.title}</div>
             <div className='task-by'>
               Posted by <b>{task.user.nickname || task.user.given_name || task.user.username}</b>
@@ -230,13 +234,14 @@ const Task = () => {
               : <div className="task-desc">{task.description}</div>
             }
             {task.user.email &&
-              <div className="task-attr-label"><span>Email:</span> <a href={"mailto:" + task.user.email}>{task.user.email}</a></div>
+              <div className="task-attr-label"><span>Owner Email:</span> <a href={"mailto:" + task.user.email}>{task.user.email}</a></div>
             }
             {task.user.volunteer_email &&
-              <div className="task-attr-label"><span>Volunteer Email:</span><a href={"mailto:" + task.user.volunteer_email}>{task.user.volunteer_email}</a></div>
+              <div className="task-attr-label"><span>Volunteer Email:</span> <a href={"mailto:" + task.user.volunteer_email}>{task.user.volunteer_email}</a></div>
             }
           </div>
         </div>
+      </>
       }
 
       {!isNewTask && task.id && ownsTask &&
@@ -252,16 +257,31 @@ const Task = () => {
               Volunteer
             </Button>
           }
-          <Confirm
-            open={confirm}
-            header='Are you sure you want to volunteer? (your email will be shown to the task owner)'
-            content="The task owner's email will be displayed. Please contact the task owner at your earliest convenience."
-            onCancel={() => setConfirm(false)}
-            onConfirm={() => {
-              setConfirm(false);
-              volunteerForTask();
-            }}
-          />
+
+          <Modal open={confirm} >
+            <Header>
+              Are you sure you want to volunteer? <br />
+              Your email will be shown to the task owner
+            </Header>
+            <Modal.Content>
+              <p>
+                Once you have volunteered, the owner's email will be displayed. <br />
+                Please get in touch with the task owner at your earliest convenience to get more information about them and their task. <br /><br />
+                Thank you for volunteering.
+              </p>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button color='red' inverted onClick={() => setConfirm(false)}>
+                Cancel
+              </Button>
+              <Button color='green' inverted onClick={() => {
+                setConfirm(false);
+                volunteerForTask();
+              }}>
+                Ok
+              </Button>
+            </Modal.Actions>
+          </Modal>
         </div>
       }
     </div>
