@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Layout, Header, Navigation, Drawer, Content } from 'react-mdl';
 import Main from './Main';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 import { Auth } from 'aws-amplify';
 import { Hub } from '@aws-amplify/core';
@@ -13,6 +13,9 @@ import '@aws-amplify/ui/dist/style.css';
 // Amplify.configure(awsmobile);
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    const history = useHistory()
 
     useEffect(() => {
         const currentUser = () => {
@@ -20,10 +23,14 @@ const App = () => {
                 .then(user => {
                     // setText("logged in") 
                     setLoggedIn(true)
+                    const userGroups = user.signInUserSession.accessToken.payload['cognito:groups']
+                    setIsAdmin(userGroups?.includes('Admin'))
+                    history.push('/')
                 })
                 .catch(err => {
                     // setText("not logged in") 
                     setLoggedIn(false)
+                    setIsAdmin(false)
                 });
         };
 
@@ -31,17 +38,30 @@ const App = () => {
         currentUser();  // check manually the first time because we won't get a Hub event
         return () => Hub.remove('auth', currentUser) // cleanup
 
-    }, []);
+    }, [history]);
 
     return (
         <div>
             <Layout>
-                <Header className="header-color" title="Quarantine Assist">
+                <Header
+                    className="header-color"
+                    title={
+                        <div>Quarantine Assist&nbsp;&nbsp;
+                            {isAdmin && <span style={{ fontSize: 'small' }}>(ADMIN)</span>}
+                        </div>
+                    }
+                >
                     <Navigation>
                         <Link to="/">Home</Link>
                         <Link to="/tasks/all">Tasks</Link>
                         <Link to="/profile">Profile</Link>
-                        {!loggedIn ? <Link to="/login">Login</Link> : ""}
+                        {isAdmin && <Link to='/logs'>Logs</Link>}
+                        {!loggedIn
+                            ? <Link to="/login">
+                                <button className='amplify-button'>SIGN IN</button>
+                            </Link>
+                            : ""
+                        }
                         {loggedIn ? <AmplifySignOut /> : ""}
                         {/* {loggedIn && <AmplifySignOut />} */}
                         {/* <AmplifySignOut />  */}
@@ -52,7 +72,13 @@ const App = () => {
                         <Link to="/">Home</Link>
                         <Link to="/tasks/all">Tasks</Link>
                         <Link to="/profile">Profile</Link>
-                        {!loggedIn ? <Link to="/login">Login</Link> : ""}
+                        {isAdmin && <Link to='/logs'>Logs</Link>}
+                        {!loggedIn
+                            ? <Link to="/login">
+                                <button className='amplify-button'>SIGN IN</button>
+                            </Link>
+                            : ""
+                        }
                         {loggedIn ? <AmplifySignOut /> : ""}
                     </Navigation>
                 </Drawer>
