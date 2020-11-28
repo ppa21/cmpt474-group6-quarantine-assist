@@ -168,12 +168,16 @@ def lambda_handler(event, context):
             Key={
                 'id': event['pathParameters']['id']
             },
-            UpdateExpression='set description = :description, updated_at = :now',
+            UpdateExpression='set description = :description, updated_at = :now, #S = :new_status',
             ConditionExpression='user_id = :user_sub',
+                            ExpressionAttributeNames={
+                    '#S': 'status'
+                },
             ExpressionAttributeValues={
                 ':description': body['description'],
                 ':now': now,
-                ':user_sub': user_sub
+                ':user_sub': user_sub,
+                ':new_status': body['status']
             },
             ReturnValues='ALL_NEW'
         )
