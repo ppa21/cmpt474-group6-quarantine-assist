@@ -45,7 +45,7 @@ def lambda_handler(event, context):
             )
 
             volunteer_user = None
-            volunteer_sub = tem['Item'].get('volunteer_id')
+            volunteer_sub = item['Item'].get('volunteer_id')
             if volunteer_sub:
                 volunteer_response = cognito.list_users(
                     UserPoolId=user_pool_id,
@@ -57,17 +57,17 @@ def lambda_handler(event, context):
             user = {
                 'username': task_user['Username']
             }
-            if task_user_sub == current_user_sub OR volunteer_sub == current_user_sub: #TODO add OR if the current_use_sub is the same as volunteer_id if one exists
+            if task_user_sub == current_user_sub or volunteer_sub == current_user_sub:
                 user['email'] = [a for a in task_user['Attributes'] if a['Name'] == 'email'][0]['Value']
-                user['volunteer_email'] = [a for a in volunteer_user['Attributes'] if a['Name'] == 'email'][0]['Value']
+                if volunteer_user:
+                    user['volunteer_email'] = [a for a in volunteer_user['Attributes'] if a['Name'] == 'email'][0]['Value']
+
 
             for attribute in task_user['Attributes']:
                 if attribute['Name'] in ('nickname', 'given_name', 'family_name'):
                     user[attribute['Name']] = attribute['Value']
-                
-            
+
             item['Item']['user'] = user
-            item['Item']['requestContext'] = event['requestContext']
 
             return dict(
                 statusCode=200,

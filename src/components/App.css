@@ -5,6 +5,14 @@
     max-width: 800px;
 }
 
+.container input[type=email], 
+.container input[type=password], 
+.container input[type=search], 
+.container input[type=text] {
+    -webkit-appearance: auto;
+    -moz-appearance: none;
+}
+
 h1 {
     font-size: 35px !important;
     text-align: center;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import 'semantic-ui-css/semantic.min.css'
 import './App.css';
 import { Layout, Header, Navigation, Drawer, Content } from 'react-mdl';
 import Main from './Main';
@@ -23,7 +24,6 @@ const App = () => {
             Auth.currentAuthenticatedUser()
                 .then(user => {
                     // setText("logged in") 
-                    console.log(user)
                     setLoggedIn(true)
                     setUsername(user.username)
                     const userGroups = user.signInUserSession.accessToken.payload['cognito:groups']
