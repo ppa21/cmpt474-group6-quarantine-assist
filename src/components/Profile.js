@@ -79,7 +79,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="profile">
+    <div className="container profile">
       <h1>Your Profile</h1>
       <div className="all-attributes-container">
         {Object.keys(newAttributes).length && Object.keys(attrKeys).map((key) => (
