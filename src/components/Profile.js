@@ -38,7 +38,7 @@ const Profile = () => {
       const c_user = await Auth.currentAuthenticatedUser()
       setUser(c_user)
       setAttributes(a => ({...a, ...c_user.attributes}))
-      setNewAttributes(c_user.attributes)
+      setNewAttributes({...newAttributes,...c_user.attributes})
     }
 
     fetchUserAttributes()
