@@ -1,0 +1,24 @@
+.logs {
+  background-color: #424242;
+  padding: 20px 30px;
+  border-radius: 3px;
+  font-family: menlo, monospace;
+  font-size: small;
+  color: #0ff5ac;
+  margin-bottom: 40px;
+}
+
+.log .fas {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.log .timestamp {
+  color: #f059cc;
+}
+
+.log .log-expanded {
+  white-space: pre;
+  font-size: smaller;
+  line-height: 1.25rem;
+}

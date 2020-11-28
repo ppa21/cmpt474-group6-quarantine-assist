@@ -7,6 +7,7 @@ import Home from "./Home"
 import TasksPage from './TasksPage';
 import VolunteeredTasks from "./VolunteeredTasks"
 import MyTasks from "./MyTasks"
+import Logs from './Logs'
 
 const Main = () => (
   <Switch>
@@ -17,6 +18,7 @@ const Main = () => (
     <Route path="/login" exact component={Login} />
     <Route path='/task' component={Task} />
     <Route path='/profile' component={Profile} />
+    <Route path='/logs' exact component={Logs} />
   </Switch>
 )
 

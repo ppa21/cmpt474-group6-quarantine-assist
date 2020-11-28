@@ -99,7 +99,7 @@ const TasksPage = () => {
         >
           <div className="task-title">{task.title}</div>
           <div className='task-created-at'>
-            Posted {parseDate(task.created_at)}
+            Posted {parseDate(task.created_at)} PST
             {task.updated_at > task.created_at && ' (edited)'}
           </div>
           <div className="task-desc">{task.description}</div>
