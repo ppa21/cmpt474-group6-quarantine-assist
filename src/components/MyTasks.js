@@ -5,7 +5,7 @@
             https://stackoverflow.com/questions/37997893/promise-error-objects-are-not-valid-as-a-react-child 
 */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Auth } from 'aws-amplify'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -24,8 +24,12 @@ const MyTasks = () => {
   const [filteredList, setFilteredList] = useState(tasks)
   const [renderTasks, setRenderTasks] = useState([]);
   const [check, setCheck] = useState(false);
+  const isMounted = useRef(null);
+
 
   useEffect(() => {
+    isMounted.current = true;
+
     async function fetchTasks() {
       try {
         const sessionObject = await Auth.currentSession();
@@ -36,6 +40,9 @@ const MyTasks = () => {
             headers: { 'Authorization': idToken }
           }
         )
+
+        if(!isMounted.current) return
+
         setTasks(response.data)
         setCheck(true)
         setFilteredList(response.data)
@@ -45,6 +52,8 @@ const MyTasks = () => {
     }
 
     fetchTasks()
+    
+    return () => (isMounted.current = false)
   }, []) 
 
   const handleChange = async e => {

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react';
-import { useHistory, useLocation, Router } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Button, Modal, Header } from 'semantic-ui-react'
 import axios from 'axios'
 import Loader from 'react-loader-spinner'
-import { parseDate, logEvent, LogType } from '../utils'
+import { logEvent, LogType } from '../utils'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import "./Task.css"
 import Menu from '@material-ui/core/Menu';
@@ -32,8 +32,11 @@ const Task = () => {
   const isNewTask = location.pathname.split('/')[2] === 'new'
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMounted = useRef(null);
 
   useEffect(() => {
+    isMounted.current = true
+
     async function fetchTask() {
       const id = location.pathname.split('/')[2]
       const sessionObject = await Auth.currentSession();
@@ -43,6 +46,7 @@ const Task = () => {
 
     if (!isNewTask) fetchTask()
 
+    return () => (isMounted.current = false)
   }, [isNewTask, location.pathname])
 
   const loadTask = async (idToken, taskId) => {
@@ -54,6 +58,9 @@ const Task = () => {
           headers: { 'Authorization': idToken }
         }
       )
+
+      if(!isMounted.current) return
+
       const userInfo = await Auth.currentUserInfo()
       setOwnsTask(response.data.user_id === userInfo.attributes.sub)
       setIsTaskVolunteer(response.data.volunteer_id && response.data.volunteer_id === userInfo.attributes.sub)
