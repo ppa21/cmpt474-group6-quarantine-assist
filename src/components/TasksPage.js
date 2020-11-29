@@ -13,7 +13,7 @@ import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import './TasksPage.css'
 import "./SearchBar.css"
-import { parseDate } from '../utils' 
+import TaskItem from './TaskItem'
 
 Amplify.configure(awsmobile);
 const TasksPage = () => {
@@ -96,18 +96,7 @@ const TasksPage = () => {
       {tasks
         .sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)  // sort by (descending) created_at
         .map(task => (
-        <Link
-          to={`/task/${task.id}`}
-          className="task-container"
-          key={task.id}
-        >
-          <div className="task-title">{task.title}</div>
-          <div className='task-created-at'>
-            Posted {parseDate(task.created_at)} PST
-            {task.updated_at > task.created_at && ' (edited)'}
-          </div>
-          <div className="task-desc">{task.description}</div>
-        </Link>
+          <TaskItem task={task} key={task.id}/>
       ))}
     </div>
   )

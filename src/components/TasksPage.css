@@ -1,36 +1,3 @@
-.task-container{
-    justify-content:center;
-    border-radius: 20px;
-    border: 2px solid rgb(105, 105, 105);
-    padding: 15px 20px 15px 20px;
-    margin: 15px 0 5px 0;
-    text-decoration: none;
-}
-
-.task-container:last-of-type {
-    margin-bottom: 75px;
-}
-
-.tasks .task-container:hover .task-title {
-    text-decoration: underline;
-}
-
-.task-title{
-    color: black;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.task-created-at {
-    color: #3b5aa5;
-    font-size: 0.875em;
-    margin: 5px 0 10px 0;
-}
-
-.task-desc {
-    color: #3b5aa5;
-}
-
 .create-btn-container{
     /* border: 2px solid purple; */
     width: 100%;
