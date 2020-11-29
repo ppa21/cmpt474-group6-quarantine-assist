@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Auth } from 'aws-amplify';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -33,16 +33,24 @@ const Profile = () => {
   )
 
   const toastSettings = { position: "bottom-center", autoClose: 3000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, }
+  const isMounted = useRef(null);
 
   useEffect(() => {
+    isMounted.current = true;
+
     const fetchUserAttributes = async () => {
       const c_user = await Auth.currentAuthenticatedUser()
+
+      if(!isMounted.current) return
+      
       setUser(c_user)
       setAttributes(a => ({...a, ...c_user.attributes}))
       setNewAttributes({...newAttributes, ...c_user.attributes})
     }
 
     fetchUserAttributes()
+    
+    return () => (isMounted.current = false)
   }, [])
 
   

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { Auth } from 'aws-amplify'
 import { withAuthenticator } from 'aws-amplify-react'
@@ -6,10 +6,12 @@ import { LogType } from '../utils'
 import './Logs.css'
 
 const Logs = () => {
-  const [isMounted, setIsMounted] = useState(false)
   const [logs, setLogs] = useState([])
+  const isMounted = useRef(null);
   
   useEffect(() => {
+    isMounted.current = true;
+
     async function fetchLogs() {
       try {
         const sessionObject = await Auth.currentSession();
@@ -20,15 +22,19 @@ const Logs = () => {
             headers: { 'Authorization': idToken }
           }
         )
+
+        if(!isMounted.current) return
+
         //console.log(response.data)
         setLogs(response.data.map(log => ({ ...log, isExpanded: false })))
-        setIsMounted(true)
       } catch (err) {
         console.error(err)
       }
     }
 
     fetchLogs()
+
+    return () => (isMounted.current = false)
   }, [])
 
   const describeEvent = type => {
@@ -63,8 +69,8 @@ const Logs = () => {
     <div className='container'>
       <h1>Application Logs</h1>
       <div className='logs'>
-        {!isMounted && <div>Loading...</div>}
-        {isMounted && logs.length === 0 && <div>No logs found</div>}
+        {!isMounted.current && <div>Loading...</div>}
+        {isMounted.current && logs.length === 0 && <div>No logs found</div>}
         {logs.length > 0 &&
           logs
             .sort((a, b) => new Date(a.timestampUTC) > new Date(b.timestampUTC) ? -1 : 1 )  // newest first

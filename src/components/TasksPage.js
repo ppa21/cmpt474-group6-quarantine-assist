@@ -2,7 +2,7 @@
   Reference for search bar = https://dev.to/iam_timsmith/lets-build-a-search-bar-in-react-120j
 */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Auth } from 'aws-amplify'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -21,9 +21,10 @@ const TasksPage = () => {
   const [tasks, setTasks] = useState([])
   const [filteredList, setFilteredList] = useState(tasks)
   const [check, setCheck] = useState(false);
+  const isMounted = useRef(null);
 
   useEffect(() => {
-    let isSubscribed = true;
+    isMounted.current = true;
 
     async function fetchTasks() {
       try {
@@ -36,7 +37,7 @@ const TasksPage = () => {
           }
         )
 
-        if(!isSubscribed) return
+        if(!isMounted.current) return
 
         setTasks(response.data)
         setCheck(true)
@@ -48,7 +49,7 @@ const TasksPage = () => {
 
     fetchTasks()
 
-    return () => (isSubscribed = false)
+    return () => (isMounted.current = false)
   }, []) 
 
   const handleChange = async e => {
