@@ -41,7 +41,7 @@ const VolunteeredTasks = () => {
           }
         )
 
-        if(!isMounted.current) return
+        if (!isMounted.current) return
 
         setTasks(response.data)
         setCheck(true)
@@ -54,30 +54,31 @@ const VolunteeredTasks = () => {
     fetchTasks()
 
     return () => (isMounted.current = false)
-  }, []) 
+  }, [])
 
   const handleChange = async e => {
     var currentTaskList = [];
     var newTaskList = [];
 
     if (e.target.value !== "") {
-      currentTaskList = tasks; 
+      currentTaskList = tasks;
 
       newTaskList = currentTaskList.filter(task => {
         const title = task.title.toLowerCase();
-        const userInput = e.target.value.toLowerCase(); 
-        return title.includes(userInput);
+        const status = task.status.toLowerCase();
+        const userInput = e.target.value.toLowerCase();
+        return title.includes(userInput) || status.includes(userInput);
       });
-    } else { 
-        newTaskList = tasks; 
-    } 
+    } else {
+      newTaskList = tasks;
+    }
 
-    setTasks(newTaskList) 
+    setTasks(newTaskList)
 
-    if(e.target.value.trim() === "") {
+    if (e.target.value.trim() === "") {
       setTasks(filteredList)
     }
-  } 
+  }
 
   useEffect(() => {
     Auth.currentAuthenticatedUser().then(user => {
@@ -92,21 +93,21 @@ const VolunteeredTasks = () => {
 
       <div className="grid-container">
         <div className="ui search grid-item">
-          <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} /> 
+          <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} />
           <div className="results"></div>
-        </div> 
-      </div> 
+        </div>
+      </div>
 
       {!check && <div className="spinner">
         <Loader type="Oval" color="#008cff" />
       </div>}
-      {check && !renderTasks.length && <h5>You have not volunteered for any task.</h5>} 
+      {check && !renderTasks.length && <h5>You have not volunteered for any task.</h5>}
 
       {renderTasks
         .sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)  // sort by (descending) created_at
         .map(task => (
           <TaskItem task={task} key={task.id} />
-      ))}
+        ))}
     </div>
   )
 }

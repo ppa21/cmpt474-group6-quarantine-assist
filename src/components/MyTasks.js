@@ -65,8 +65,9 @@ const MyTasks = () => {
 
       newTaskList = currentTaskList.filter(task => {
         const title = task.title.toLowerCase();
+        const status = task.status.toLowerCase();
         const userInput = e.target.value.toLowerCase(); 
-        return title.includes(userInput);
+        return title.includes(userInput) || status.includes(userInput);
       });
     } else { 
         newTaskList = tasks; 
