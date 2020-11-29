@@ -12,9 +12,9 @@ const statusStyle = {
 const TaskItem = ({task}) => {
     return (
         <Link
-        to={`/task/${task.id}`}
-        className="task-container"
-        key={task.id}
+            to={`/task/${task.id}`}
+            className="task-container"
+            key={task.id}
         >
             <div className="task-header">
                 <div className="task-title">
