@@ -2,6 +2,16 @@ import boto3
 import datetime
 import json
 import uuid
+from html.parser import HTMLParser
+
+def strip_html(text):
+    if text is None:
+        return ''
+    parts = []
+    parser = HTMLParser()
+    parser.handle_data = parts.append
+    parser.feed(text)
+    return ''.join(parts)
 
 def is_user_sub_present(event):
     return (
@@ -94,15 +104,18 @@ def lambda_handler(event, context):
 
         try: 
             body = json.loads(event['body'])
+            title = strip_html(body['title'])
+            description = strip_html(body['description'])
+            status = strip_html(body['status'])
             user_sub = event['requestContext']['authorizer']['claims']['sub']
             item = dict(
                 id=str(uuid.uuid4()),
-                title=body['title'],
-                description=body['description'],
+                title=title,
+                description=description,
                 created_at=now,
                 updated_at=now,
                 user_id=user_sub,
-                status=body['status']
+                status=status
             )
             # create one item
             table.put_item(Item=item)
@@ -131,6 +144,7 @@ def lambda_handler(event, context):
         
         try:
             body = json.loads(event['body'])
+            status = strip_html(body['status'])
             table.update_item(
                 Key={
                     'id': event['pathParameters']['id']
@@ -142,7 +156,7 @@ def lambda_handler(event, context):
                 },
                 ExpressionAttributeValues={
                     ':user_sub': user_sub,
-                    ':new_status': body['status'],
+                    ':new_status': status,
                     ':open_status': 'Open',
                 }
             )
@@ -163,6 +177,8 @@ def lambda_handler(event, context):
         
         # only update item if user sub matches task's user id
         body = json.loads(event['body'])
+        description = strip_html(body['description'])
+        status = strip_html(body['status'])
         user_sub = event['requestContext']['authorizer']['claims']['sub']
         item = table.update_item(
             Key={
@@ -174,10 +190,10 @@ def lambda_handler(event, context):
                     '#S': 'status'
                 },
             ExpressionAttributeValues={
-                ':description': body['description'],
+                ':description': description,
                 ':now': now,
                 ':user_sub': user_sub,
-                ':new_status': body['status']
+                ':new_status': status
             },
             ReturnValues='ALL_NEW'
         )
