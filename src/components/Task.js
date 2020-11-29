@@ -77,8 +77,7 @@ const Task = () => {
         {
           headers: { 'Authorization': idToken }
         }
-      )
-      //console.log(response.data)
+      ) 
 
       invalidateTasksCache(idToken);
       logEvent(task, LogType.DELETE_TASK)
@@ -115,8 +114,7 @@ const Task = () => {
           {
             headers: { 'Authorization': idToken }
           }
-        )
-        //console.log(response.data)
+        ) 
 
         invalidateTasksCache(idToken);
         logEvent(response.data, LogType.CREATE_TASK)
@@ -148,7 +146,6 @@ const Task = () => {
 
       invalidateTasksCache(idToken);
       logEvent(response.data, LogType.UPDATE_TASK)
-      //console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)

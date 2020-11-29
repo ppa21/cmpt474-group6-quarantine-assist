@@ -1,7 +1,6 @@
 .search {
     width: 500px;
-    text-align: left !important;
-    /* text-indent: 1px; */
+    text-align: left !important; 
 }
 
 input::placeholder {

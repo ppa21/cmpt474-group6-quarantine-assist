@@ -52,13 +52,10 @@
 }
 
 .custom-h1 {
-    margin:10px 0px 10px 0px;
-    /* padding: 0px; */
-    /* position: fixed */
+    margin:10px 0px 10px 0px; 
 }
 
 .grid-container {
-    display: grid;
-    /* margin-top: -15px; */
+    display: grid; 
     grid-template-columns: 700px 110px;
   }
