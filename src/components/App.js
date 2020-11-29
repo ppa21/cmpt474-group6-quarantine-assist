@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import 'semantic-ui-css/semantic.min.css'
 import './App.css';
 import { Layout, Header, Navigation, Drawer, Content } from 'react-mdl';
 import Main from './Main';
@@ -13,6 +14,7 @@ import '@aws-amplify/ui/dist/style.css';
 // Amplify.configure(awsmobile);
 const App = () => {
     const [loggedIn, setLoggedIn] = useState(false)
+    const [username, setUsername] = useState('')
     const [isAdmin, setIsAdmin] = useState(false)
 
     const history = useHistory()
@@ -23,6 +25,7 @@ const App = () => {
                 .then(user => {
                     // setText("logged in") 
                     setLoggedIn(true)
+                    setUsername(user.username)
                     const userGroups = user.signInUserSession.accessToken.payload['cognito:groups']
                     setIsAdmin(userGroups?.includes('Admin'))
                     history.push('/')
@@ -30,6 +33,7 @@ const App = () => {
                 .catch(err => {
                     // setText("not logged in") 
                     setLoggedIn(false)
+                    setUsername('')
                     setIsAdmin(false)
                 });
         };
@@ -56,7 +60,7 @@ const App = () => {
                         <Link to="/tasks/all">Tasks</Link>
                         <Link to='/tasks/volunteered_tasks'>Volunteered Tasks</Link>
                         <Link to="/tasks/mytasks">My Tasks</Link>
-                        <Link to="/profile">Profile</Link>
+                        {loggedIn ? <Link to="/profile">Profile ({username})</Link> : ""}
                         {isAdmin && <Link to='/logs'>Logs</Link>}
                         {!loggedIn
                             ? <Link to="/login">
@@ -75,7 +79,7 @@ const App = () => {
                         <Link to="/tasks/all">Tasks</Link>
                         <Link to='/tasks/volunteered_tasks'>Volunteered Tasks</Link>
                         <Link to="/tasks/mytasks">My Tasks</Link>
-                        <Link to="/profile">Profile</Link>
+                        {loggedIn ? <Link to="/profile">Profile ({username})</Link> : ""}
                         {isAdmin && <Link to='/logs'>Logs</Link>}
                         {!loggedIn
                             ? <Link to="/login">
