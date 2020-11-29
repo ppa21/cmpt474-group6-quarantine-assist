@@ -36,7 +36,7 @@ const TasksPage = () => {
           }
         )
 
-        if(!isMounted.current) return
+        if (!isMounted.current) return
 
         setTasks(response.data)
         setCheck(true)
@@ -49,30 +49,31 @@ const TasksPage = () => {
     fetchTasks()
 
     return () => (isMounted.current = false)
-  }, []) 
+  }, [])
 
   const handleChange = async e => {
     var currentTaskList = [];
     var newTaskList = [];
 
     if (e.target.value !== "") {
-      currentTaskList = tasks; 
+      currentTaskList = tasks;
 
       newTaskList = currentTaskList.filter(task => {
         const title = task.title.toLowerCase();
-        const userInput = e.target.value.toLowerCase(); 
-        return title.includes(userInput);
+        const status = task.status.toLowerCase();
+        const userInput = e.target.value.toLowerCase();
+        return title.includes(userInput) || status.includes(userInput);
       });
-    } else { 
-        newTaskList = tasks; 
-    } 
+    } else {
+      newTaskList = tasks;
+    }
 
-    setTasks(newTaskList) 
+    setTasks(newTaskList)
 
-    if(e.target.value.trim() === "") {
+    if (e.target.value.trim() === "") {
       setTasks(filteredList)
     }
-  } 
+  }
 
   return (
     <div className="container tasks">
@@ -80,9 +81,9 @@ const TasksPage = () => {
 
       <div className="grid-container">
         <div className="ui search grid-item">
-          <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} /> 
+          <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} />
           <div className="results"></div>
-        </div> 
+        </div>
         <div className="grid-item create-btn-container">
           <Link to='/task/new'><button className='grid-item create-btn'>New task</button></Link>
         </div>
@@ -96,8 +97,8 @@ const TasksPage = () => {
       {tasks
         .sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)  // sort by (descending) created_at
         .map(task => (
-          <TaskItem task={task} key={task.id}/>
-      ))}
+          <TaskItem task={task} key={task.id} />
+        ))}
     </div>
   )
 }

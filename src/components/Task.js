@@ -309,7 +309,7 @@ return (
     {!isNewTask && task.id && ownsTask &&
       <div className='task-actions'>
         <button onClick={updateTask}>Update task</button>
-        <button onClick={deleteTask}>Delete task</button>
+        <button className="delete-btn" onClick={deleteTask}>Delete task</button>
       </div>
     }
     {!isNewTask && task.id && !ownsTask &&

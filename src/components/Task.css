@@ -71,3 +71,13 @@
     font-size: 1.25em;
     margin: 15px 0 0 15px;
 }
+
+.delete-btn {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: white;
+    color: #dc3545;
+  }

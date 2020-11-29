@@ -18,7 +18,7 @@
 }
 
 .log .log-expanded {
-  white-space: pre;
+  white-space: pre-wrap;
   font-size: smaller;
   line-height: 1.25rem;
 }
