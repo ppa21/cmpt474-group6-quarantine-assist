@@ -13,8 +13,7 @@ import Loader from 'react-loader-spinner'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import './TasksPage.css'
 import "./SearchBar.css"
-import { parseDate } from '../utils'
-// import SearchBar from "./SearchBar"
+import { parseDate } from '../utils' 
 
 Amplify.configure(awsmobile);
 const TasksPage = () => {
@@ -83,10 +82,7 @@ const TasksPage = () => {
         <div className="ui search grid-item">
           <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} /> 
           <div className="results"></div>
-        </div>
-        {/* <div className="grid-item">
-          <SearchBar placeholder="Search for a task..." handleChange={e => handleChange(e)} /> 
-        </div> */}
+        </div> 
         <div className="grid-item create-btn-container">
           <Link to='/task/new'><button className='grid-item create-btn'>New task</button></Link>
         </div>

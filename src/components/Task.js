@@ -8,7 +8,7 @@ import Loader from 'react-loader-spinner'
 import { logEvent, LogType } from '../utils'
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import "./Task.css"
-import Menu from '@material-ui/core/Menu';  
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const TaskStatus = {
@@ -84,8 +84,7 @@ const Task = () => {
         {
           headers: { 'Authorization': idToken }
         }
-      )
-      //console.log(response.data)
+      ) 
 
       invalidateTasksCache(idToken);
       logEvent(task, LogType.DELETE_TASK)
@@ -122,8 +121,7 @@ const Task = () => {
           {
             headers: { 'Authorization': idToken }
           }
-        )
-        //console.log(response.data)
+        ) 
 
         invalidateTasksCache(idToken);
         logEvent(response.data, LogType.CREATE_TASK)
@@ -155,7 +153,6 @@ const Task = () => {
 
       invalidateTasksCache(idToken);
       logEvent(response.data, LogType.UPDATE_TASK)
-      //console.log(response.data)
       history.push(`/tasks/all`)
     } catch (err) {
       console.error(err)
