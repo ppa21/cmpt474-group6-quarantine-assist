@@ -58,6 +58,8 @@ const App = () => {
                     <Navigation>
                         <Link to="/">Home</Link>
                         <Link to="/tasks/all">Tasks</Link>
+                        <Link to='/tasks/volunteered_tasks'>Volunteered Tasks</Link>
+                        <Link to="/tasks/mytasks">My Tasks</Link>
                         {loggedIn ? <Link to="/profile">Profile ({username})</Link> : ""}
                         {isAdmin && <Link to='/logs'>Logs</Link>}
                         {!loggedIn
@@ -75,6 +77,8 @@ const App = () => {
                     <Navigation>
                         <Link to="/">Home</Link>
                         <Link to="/tasks/all">Tasks</Link>
+                        <Link to='/tasks/volunteered_tasks'>Volunteered Tasks</Link>
+                        <Link to="/tasks/mytasks">My Tasks</Link>
                         {loggedIn ? <Link to="/profile">Profile ({username})</Link> : ""}
                         {isAdmin && <Link to='/logs'>Logs</Link>}
                         {!loggedIn

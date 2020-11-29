@@ -1,8 +1,11 @@
 /*
-  Reference for search bar = https://dev.to/iam_timsmith/lets-build-a-search-bar-in-react-120j
+  References:
+            https://github.com/aws-amplify/amplify-js/issues/6578 
+            https://stackoverflow.com/questions/38884522/why-is-my-asynchronous-function-returning-promise-pending-instead-of-a-val
+            https://stackoverflow.com/questions/37997893/promise-error-objects-are-not-valid-as-a-react-child 
 */
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react'
 import { Auth } from 'aws-amplify'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -16,9 +19,10 @@ import "./SearchBar.css"
 import { parseDate } from '../utils' 
 
 Amplify.configure(awsmobile);
-const TasksPage = () => {
+const VolunteeredTasks = () => {
   const [tasks, setTasks] = useState([])
   const [filteredList, setFilteredList] = useState(tasks)
+  const [renderTasks, setRenderTasks] = useState([]);
   const [check, setCheck] = useState(false);
   const isMounted = useRef(null);
 
@@ -74,26 +78,30 @@ const TasksPage = () => {
     }
   } 
 
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then(user => {
+      let volunteeredTasks = tasks.filter(task => task.volunteer_id === user.attributes.sub);
+      setRenderTasks(volunteeredTasks);
+    })
+  }, [tasks])
+
   return (
     <div className="container tasks">
-      <h1 className="custom-h1">Latest tasks</h1>
+      <h1 className="custom-h1">Volunteered Tasks</h1>
 
       <div className="grid-container">
         <div className="ui search grid-item">
           <input className="prompt search" type="text" placeholder="Search for a task..." onChange={e => handleChange(e)} /> 
           <div className="results"></div>
         </div> 
-        <div className="grid-item create-btn-container">
-          <Link to='/task/new'><button className='grid-item create-btn'>New task</button></Link>
-        </div>
-      </div>
+      </div> 
 
       {!check && <div className="spinner">
         <Loader type="Oval" color="#008cff" />
       </div>}
-      {check && !tasks.length && <h5>No task to show.</h5>}
+      {check && !renderTasks.length && <h5>You have not volunteered for any task.</h5>} 
 
-      {tasks
+      {renderTasks
         .sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)  // sort by (descending) created_at
         .map(task => (
         <Link
@@ -103,7 +111,7 @@ const TasksPage = () => {
         >
           <div className="task-title">{task.title}</div>
           <div className='task-created-at'>
-            Posted {parseDate(task.created_at)} PST
+            Posted {parseDate(task.created_at)}
             {task.updated_at > task.created_at && ' (edited)'}
           </div>
           <div className="task-desc">{task.description}</div>
@@ -113,4 +121,4 @@ const TasksPage = () => {
   )
 }
 
-export default withAuthenticator(TasksPage, false);
+export default withAuthenticator(VolunteeredTasks, false);
