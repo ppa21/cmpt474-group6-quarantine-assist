@@ -4,6 +4,8 @@ import json
 import uuid
 from html.parser import HTMLParser
 
+
+# strip html code adapted from https://stackoverflow.com/a/52896484
 def strip_html(text):
     if text is None:
         return ''
@@ -49,6 +51,8 @@ def lambda_handler(event, context):
             user_pool_id = event['requestContext']['authorizer']['claims']['iss'].split('/')[-1]
             current_user_sub = event['requestContext']['authorizer']['claims']['sub']
             task_user_sub = item['Item']['user_id']
+
+            # Code to get user using sub adapted from https://stackoverflow.com/a/47968938
             owner_response = cognito.list_users(
                 UserPoolId=user_pool_id,
                 Filter='sub = "' + task_user_sub + '"',
